@@ -10,7 +10,7 @@ static void on_keyboard(unsigned char key, int x, int y);
 static void on_reshape(int width, int height);
 static void on_display(void); 
 static int animation_ongoing; 
-void on_display()
+static void on_display()
 {
      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
      glMatrixMode(GL_MODELVIEW);
