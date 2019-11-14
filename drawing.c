@@ -25,12 +25,12 @@ void draw_coordinate_system()
         glEnd();
     glPopMatrix();
 } 
-void draw_food(int x, int y, int z)
+void draw_food(const Food *food)
 {
     double edge=1;
     glPushMatrix();
         glColor3f(0,1,0);
-        glTranslatef(x,y,z);
+        glTranslatef(food->position.x,food->position.y,food->position.z); //Svaku kocku pozicioniramo da zadate koordinate
         glutSolidCube(edge);
     glPopMatrix();
 }
@@ -38,15 +38,18 @@ void draw_snake(Snake *snake)
 {
         double edge=1;
         int i;
+        // Renderovanje glave zmijice
         glPushMatrix();
                 glColor3f(1,0,0);
                 glTranslatef(snake->body[0].x,snake->body[0].y,snake->body[0].z);
                 glutSolidCube(edge);
         glPopMatrix();
+        //Renderovanje tela zmijice
         glColor3f(0,0,1);
         for (i=1;i<snake->size;i++)
         {
-            /*if (i&1)
+            /*Deo koda koji naizmenicno boji zmijicu*/
+            /*if (i&1)  
             {
                  glColor3f(0,0,1);
             }

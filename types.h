@@ -3,9 +3,14 @@
 typedef struct {
     int x,y,z;
 } Point;
+
 typedef struct {
     Point *body;
     Point direction; /*Vektor koji pokazuje trenutni smer/pravac kretanja zmijice*/
     int size;
 } Snake;
+
+typedef struct { /*TO DO obavezno dodati razlicite tipove hrane*/
+    Point position;
+} Food;
 #endif

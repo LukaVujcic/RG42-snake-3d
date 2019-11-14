@@ -6,6 +6,7 @@
 #define TIMER_ID 0
 #define TIMER_INTERVAL 200
 static Snake snake;
+static Food food;
 static void on_keyboard(unsigned char key, int x, int y);
 static void on_reshape(int width, int height);
 static void on_display(void); 
@@ -20,6 +21,7 @@ static void on_display()
                 , 0, 1, 0);
      draw_coordinate_system();
      draw_snake(&snake);
+     draw_food(&food);
      glutSwapBuffers();
 }
 
@@ -28,6 +30,10 @@ static void on_timer(int value)
     if (value != TIMER_ID)
         return;
     move_snake(&snake);
+    if (is_food_eaten(&snake,&food))
+    {
+        generate_food_position(&food.position.x,&food.position.z);
+    }
     glutPostRedisplay();
     if (animation_ongoing) {
         glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ID);
@@ -61,7 +67,11 @@ static void on_keyboard(unsigned char key, int x, int y)
         snake.direction.z=1;
         break;
     case 'p':
-        animation_ongoing=1-animation_ongoing;
+        animation_ongoing=0;
+        break;
+    case 'b':
+        animation_ongoing=1;
+        glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ID);
         break;
     }
     glutPostRedisplay();
@@ -88,23 +98,10 @@ int main(int argc,char** argv)
     glutDisplayFunc(on_display);
     glutReshapeFunc(on_reshape);
     glutKeyboardFunc(on_keyboard);
- 
-    animation_ongoing = 1;
+    
     /*Incijalizacija zmijice dok ne namestimo da zmijica raste kad pojede hranu*/
-    const int size=30; /*duzina zmijice*/
-    snake.body=malloc(sizeof(Point)*(size+1));
-    snake.size=size;
-    int i;
-    for (i=0;i<size;i++)
-    {
-        snake.body[i].x=i;
-        snake.body[i].y=0;
-        snake.body[i].z=0;
-    }
-    snake.direction.x=-1;
-    snake.direction.z=0;
-    snake.direction.x=-1;
-   
+    init_game(&snake,&food,&animation_ongoing);
+
     glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ID);
     glEnable(GL_DEPTH_TEST);
     glutMainLoop();
