@@ -9,7 +9,7 @@ static Snake snake;
 static void on_keyboard(unsigned char key, int x, int y);
 static void on_reshape(int width, int height);
 static void on_display(void); 
-static int animation_ongoing; 
+static int animation_ongoing;
 static void on_display()
 {
      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -60,8 +60,8 @@ static void on_keyboard(unsigned char key, int x, int y)
         snake.direction.x=0;
         snake.direction.z=1;
         break;
-    case 'f':
-        animation_ongoing=0;
+    case 'p':
+        animation_ongoing=1-animation_ongoing;
         break;
     }
     glutPostRedisplay();
@@ -104,6 +104,7 @@ int main(int argc,char** argv)
     snake.direction.x=-1;
     snake.direction.z=0;
     snake.direction.x=-1;
+   
     glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ID);
     glEnable(GL_DEPTH_TEST);
     glutMainLoop();

@@ -1,5 +1,6 @@
 #include "drawing.h"
 #include <GL/glut.h>
+
 void draw_coordinate_system()
 {
     glPushMatrix();
@@ -24,7 +25,15 @@ void draw_coordinate_system()
         glEnd();
     glPopMatrix();
 } 
-
+void draw_food(int x, int y, int z)
+{
+    double edge=1;
+    glPushMatrix();
+        glColor3f(0,1,0);
+        glTranslatef(x,y,z);
+        glutSolidCube(edge);
+    glPopMatrix();
+}
 void draw_snake(Snake *snake)
 {
         double edge=1;
