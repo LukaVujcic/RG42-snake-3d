@@ -1,6 +1,6 @@
 PROGRAM = Snake3D
 CC = gcc
-LDLIBS  = -lglut -lGLU -lGL
+LDLIBS  = -lglut -lGLU -lGL -lm
 CFLAGS  = -g -std=c99 -Wall -I/usr/X11R6/include -I/usr/pkg/include
 LDFLAGS = -L/usr/X11R6/lib -L/usr/pkg/lib
 $(PROGRAM): main.o drawing.o logic.o
