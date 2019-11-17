@@ -4,10 +4,13 @@
 #include <time.h>
 #include <stdio.h>
 #include <math.h>
+#include <string.h>
+
 void init_game(Snake *snake, Food *food,int *animation_ongoing)
 {
-    const int size=30; /*duzina zmijice*/
-    snake->body=malloc(sizeof(Point)*(size+1));
+    const int size=2; /*duzina zmijice*/
+    const int max_size=500; //velicina zmijice nece biti preko 500
+    snake->body=malloc(sizeof(Point)*(500));
     snake->size=size;
     int i;
     for (i=0;i<size;i++)
@@ -33,7 +36,7 @@ static int generate_random_number(int a, int b)
 }
 void generate_food_position(int *x, int *z)
 {
-    const int low=-12;
+    const int low=-15;
     const int high=12;
     *x=generate_random_number(low,high);
     *z=generate_random_number(low,high);
@@ -45,6 +48,31 @@ int is_food_eaten(const Snake *snake,const Food *food)
         return 1;
     }
     return 0;
+    
+}
+void size_up(Snake *snake, int n)
+{
+    // n za koliko da poraste
+    Point last;
+    Point before_last;
+    Point current;
+    memcpy((void *)&last,&(snake->body[snake->size-1]),sizeof(Point));
+    memcpy((void *)&before_last,&(snake->body[snake->size-2]),sizeof(Point));
+    memcpy((void *)&current,&(snake->body[snake->size-1]),sizeof(Point)); //Postavljamo trenutni na poslednji
+    Point dir; //direction 
+    dir.x=last.x-before_last.x;
+    dir.y=last.y-before_last.y;
+    dir.z=last.z-before_last.z;
+    for (int i=0;i<n;i++)
+    {
+        current.x+=dir.x;
+        current.y+=dir.y;
+        current.z+=dir.z;
+        snake->body[snake->size].x = current.x;
+        snake->body[snake->size].y = current.y;
+        snake->body[snake->size].z= current.z;
+        snake->size++;
+    }
     
 }
 void move_snake(Snake *snake)

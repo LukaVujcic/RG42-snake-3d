@@ -30,9 +30,10 @@ static void on_timer(int value)
     if (value != TIMER_ID)
         return;
     move_snake(&snake);
-    if (is_food_eaten(&snake,&food))
+    if (is_food_eaten(&snake,&food)) //Da li smo pojeli hranu
     {
-        generate_food_position(&food.position.x,&food.position.z);
+        generate_food_position(&food.position.x,&food.position.z);  //Posto je hrana pojedena generisemo novu hranu
+        size_up(&snake,1); //povecavamo zmijicu za 1 polje
     }
     glutPostRedisplay();
     if (animation_ongoing) {
