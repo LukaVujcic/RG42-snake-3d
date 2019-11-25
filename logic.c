@@ -8,6 +8,7 @@
 
 void init_game(Snake *snake, Food *food,int *animation_ongoing)
 {
+    srand(time(NULL)); //Incijalizacija seed-a
     const int size=2; /*duzina zmijice*/
     const int max_size=500; //velicina zmijice nece biti preko 500
     snake->body=malloc(sizeof(Point)*(500));
@@ -29,14 +30,13 @@ void init_game(Snake *snake, Food *food,int *animation_ongoing)
 static int generate_random_number(int a, int b)
 {
     /* b > a */
-    srand(time(NULL)); //Incijalizacija seed-a
     int r = abs((b-a)*sin(rand()))+a;
     //printf("%d",r);
     return r;
 }
 void generate_food_position(int *x, int *z)
 {
-    const int low=-15;
+    const int low=-12;
     const int high=12;
     *x=generate_random_number(low,high);
     *z=generate_random_number(low,high);
