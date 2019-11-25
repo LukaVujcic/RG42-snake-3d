@@ -65,3 +65,44 @@ void draw_snake(Snake *snake)
             glPopMatrix();
         }
 }
+void set_vertex_and_normal(double u, double v,double (*function)(double,double))
+{
+     //Povrs je paramtrizovana sa u i v
+    double diff_u, diff_v;
+    //Racunamo parcijalne izvode po u i v
+    diff_u = (function(u + 1, v)
+             - function(u - 1, v)) / 2.0;
+    diff_v = (function(u, v + 1)
+             - function(u, v - 1)) / 2.0;
+    //Postavljamo normalu kao gradijent
+    glNormal3f(-diff_u, 1, -diff_v);
+    //Tacka koju iscrtavamo
+    glVertex3f(u, function(u, v), v);
+
+}
+static double function_plane(double u,double v)//funkcija je f(u,v)=c, zadaje ravan y=c
+{
+    double c=-0.5; // uzeto je 0.5 kao edge/2, jer je edge duzina ivice kocke
+    return c;
+}
+void draw_terrain()
+{
+    int u, v;
+    glPushMatrix();
+
+    int U_FROM=-15;
+    int U_TO=15;
+    int V_FROM=-15;
+    int V_TO=15;
+    glColor3f(0,1,1);
+    for (u = U_FROM; u < U_TO; u++) { 
+        glBegin(GL_TRIANGLE_STRIP);
+        for (v = V_FROM; v <= V_TO; v++) {
+            set_vertex_and_normal(u, v, function_plane);
+            set_vertex_and_normal(u + 1, v, function_plane);
+        }
+        glEnd();
+    }
+
+    glPopMatrix();
+}

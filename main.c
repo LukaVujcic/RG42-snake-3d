@@ -16,12 +16,13 @@ static void on_display()
      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
      glMatrixMode(GL_MODELVIEW);
      glLoadIdentity();
-     gluLookAt(20, 20, 20, 
+     gluLookAt(22, 20, 22, 
                 0, 0, 0
                 , 0, 1, 0);
      draw_coordinate_system();
      draw_snake(&snake);
      draw_food(&food);
+     draw_terrain();
      glutSwapBuffers();
 }
 
