@@ -16,7 +16,7 @@ static void on_display()
      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
      glMatrixMode(GL_MODELVIEW);
      glLoadIdentity();
-     gluLookAt(22, 20, 22, 
+     gluLookAt(0, 20, 22, 
                 0, 0, 0
                 , 0, 1, 0);
      draw_coordinate_system();
@@ -84,6 +84,7 @@ static void on_reshape(int width, int height)
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluPerspective(60, (float) width / height, 1, 100);
+    glutFullScreen();
 }
 
 int main(int argc,char** argv)
