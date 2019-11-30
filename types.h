@@ -13,4 +13,7 @@ typedef struct {
 typedef struct { /*TO DO obavezno dodati razlicite tipove hrane*/
     Point position;
 } Food;
+typedef struct{
+    int U_FROM, U_TO, V_FROM, V_TO;
+} Terrain;
 #endif
