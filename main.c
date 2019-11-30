@@ -105,7 +105,7 @@ int main(int argc,char** argv)
     
     /*Incijalizacija zmijice dok ne namestimo da zmijica raste kad pojede hranu*/
     init_game(&snake,&food,&animation_ongoing,&terrain);
-
+    init_light();
     glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ID);
     glEnable(GL_DEPTH_TEST);
     glutMainLoop();
