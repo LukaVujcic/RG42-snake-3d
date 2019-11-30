@@ -6,7 +6,7 @@
 #include <math.h>
 #include <string.h>
 
-void init_game(Snake *snake, Food *food,int *animation_ongoing)
+void init_game(Snake *snake, Food *food,int *animation_ongoing,Terrain *terrain)
 {
     srand(time(NULL)); //Incijalizacija seed-a
     const int size=2; /*duzina zmijice*/
@@ -26,6 +26,10 @@ void init_game(Snake *snake, Food *food,int *animation_ongoing)
     generate_food_position(&food->position.x,&food->position.z);
     food->position.y=0;
     *animation_ongoing = 1;
+    terrain->U_FROM=-17;
+    terrain->U_TO=17;
+    terrain->V_FROM=-15;
+    terrain->V_TO=15;
 }
 static int generate_random_number(int a, int b)
 {
@@ -75,7 +79,16 @@ void size_up(Snake *snake, int n)
     }
     
 }
-void move_snake(Snake *snake)
+int is_snake_touch_border(Snake *snake, const Terrain *terrain)
+{
+    //gledamo da li postoji presek sa bilo kojom ivicom
+    if (terrain->U_FROM==snake->body[0].x+snake->direction.x || terrain->U_TO==snake->body[0].x+snake->direction.x || terrain->V_FROM==snake->body[0].z+snake->direction.z || terrain->V_TO==snake->body[0].z+snake->direction.z)
+    {
+        return 1;
+    }
+    return 0;
+}
+void move_snake(Snake *snake,const Terrain *terrain)
 {
     //printf("%d\n",generate_random_number(2,10));
     int i;
@@ -83,7 +96,7 @@ void move_snake(Snake *snake)
     for (i=snake->size-1;i>0;i--)
     {
         //Detektovanje "SAMOUJEDA"
-        if (snake->body[i].x==snake->body[0].x+snake->direction.x && snake->body[i].y==snake->body[0].y+snake->direction.y && snake->body[i].z==snake->body[0].z+snake->direction.z)
+        if (snake->body[i].x==snake->body[0].x+snake->direction.x && snake->body[i].y==snake->body[0].y+snake->direction.y && snake->body[i].z==snake->body[0].z+snake->direction.z || (is_snake_touch_border(snake,terrain)))
         {
             exit(0);      
         }

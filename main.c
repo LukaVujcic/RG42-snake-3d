@@ -7,6 +7,7 @@
 #define TIMER_INTERVAL 200
 static Snake snake;
 static Food food;
+static Terrain terrain;
 static void on_keyboard(unsigned char key, int x, int y);
 static void on_reshape(int width, int height);
 static void on_display(void); 
@@ -22,7 +23,7 @@ static void on_display()
      draw_coordinate_system();
      draw_snake(&snake);
      draw_food(&food);
-     draw_terrain();
+     draw_terrain(&terrain);
      glutSwapBuffers();
 }
 
@@ -30,7 +31,7 @@ static void on_timer(int value)
 {
     if (value != TIMER_ID)
         return;
-    move_snake(&snake);
+    move_snake(&snake,&terrain);
     if (is_food_eaten(&snake,&food)) //Da li smo pojeli hranu
     {
         generate_food_position(&food.position.x,&food.position.z);  //Posto je hrana pojedena generisemo novu hranu
@@ -103,7 +104,7 @@ int main(int argc,char** argv)
     glutKeyboardFunc(on_keyboard);
     
     /*Incijalizacija zmijice dok ne namestimo da zmijica raste kad pojede hranu*/
-    init_game(&snake,&food,&animation_ongoing);
+    init_game(&snake,&food,&animation_ongoing,&terrain);
 
     glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ID);
     glEnable(GL_DEPTH_TEST);
