@@ -12,6 +12,7 @@ static void on_keyboard(unsigned char key, int x, int y);
 static void on_reshape(int width, int height);
 static void on_display(void); 
 static int animation_ongoing;
+//TO DO Implementirati mehanizam za oslobadjanje memorije
 static void on_display()
 {
      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -20,7 +21,7 @@ static void on_display()
      gluLookAt(0, 20, 22, 
                 0, 0, 0
                 , 0, 1, 0);
-     draw_coordinate_system();
+     //draw_coordinate_system();
      draw_snake(&snake);
      draw_food(&food);
      draw_terrain(&terrain);
@@ -69,10 +70,10 @@ static void on_keyboard(unsigned char key, int x, int y)
         snake.direction.x=0;
         snake.direction.z=1;
         break;
-    case 'p':
+    case 'p': //pauziramo
         animation_ongoing=0;
         break;
-    case 'b':
+    case 'b': //pokrecemo
         animation_ongoing=1;
         glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ID);
         break;
@@ -103,12 +104,12 @@ int main(int argc,char** argv)
     glutReshapeFunc(on_reshape);
     glutKeyboardFunc(on_keyboard);
     
-    /*Incijalizacija zmijice dok ne namestimo da zmijica raste kad pojede hranu*/
+    /*Incijalizacija zmijice, osvetljenja i teksture*/
     init_game(&snake,&food,&animation_ongoing,&terrain);
     init_light();
+    init_texture();
     glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ID);
-    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST); //Ukljucujemo mogucnosti prikazivanja u 3D
     glutMainLoop();
-
     return 0;
 }
