@@ -16,9 +16,10 @@ static int animation_ongoing;
 static void on_display()
 {
      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+     glClearColor(0,0.6,0.6,1);
      glMatrixMode(GL_MODELVIEW);
      glLoadIdentity();
-     gluLookAt(0, 20, 22, 
+     gluLookAt(0, 22, 20.5, 
                 0, 0, 0
                 , 0, 1, 0);
      //draw_coordinate_system();

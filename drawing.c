@@ -3,7 +3,7 @@
 #include <GL/glut.h>
 static int texture_names[1];
 #define FILENAME0 "wood.bmp"
-
+#define FILENAME1 "brick.bmp"
 void init_texture(void)
 {
     /* Objekat koji predstavlja teskturu ucitanu iz fajla. */
@@ -23,7 +23,7 @@ void init_texture(void)
     image_read(image, FILENAME0);
 
     /* Generisu se identifikatori tekstura. */
-    glGenTextures(1, texture_names);
+    glGenTextures(2, texture_names);
 
     glBindTexture(GL_TEXTURE_2D, texture_names[0]);
     glTexParameteri(GL_TEXTURE_2D,
@@ -39,6 +39,22 @@ void init_texture(void)
                  GL_RGB, GL_UNSIGNED_BYTE, image->pixels);
     /* Iskljucujemo teksturu */
     glBindTexture(GL_TEXTURE_2D, 0);
+
+    /*Ucitavamo drugu strukturu*/
+    image_read(image, FILENAME1);
+
+    glBindTexture(GL_TEXTURE_2D, texture_names[1]);
+     glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
+                 image->width, image->height, 0,
+                 GL_RGB, GL_UNSIGNED_BYTE, image->pixels);
     /* Oslobadjamo objekat iz memorije */
     image_done(image);
 
@@ -102,7 +118,7 @@ void draw_snake(Snake *snake)
         {
                 float material_ambient[] = { 1, 0, 0, 1 };
                 float material_diffuse[] = { 1, 0, 0, 1 };
-                float material_specular[] = { 0.1, 0.1, 0.1, 1 };
+                float material_specular[] = { 1, 0, 0, 1 };
                 //float high_shininess[] = { 4 };
                 glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, material_ambient);
                 glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, material_diffuse);
@@ -173,44 +189,100 @@ static void draw_border_of_terrain(int U_FROM, int U_TO, int V_FROM, int V_TO)
 {
     double edge=1;
   //  glColor3f(1,0,0);
+    glPushMatrix();
     {
-        float material_ambient[] = { 1, 0, 0, 1 };
+        float material_ambient[] = { 0.5, 0.5, 0.5, 1 };
         float material_diffuse[] = { 1, 0, 0, 1 };
-        float material_specular[] = { 0.1, 0.1, 0.1, 1 };
+        float material_specular[] = { 0.5, 0.5, 0.5, 1 };
         //float high_shininess[] = { 4 };
         glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, material_ambient);
         glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, material_diffuse);
         glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, material_specular);
-        glColor3f(0,1,1);
+        //glColor3f(0,1,1);
     }
-    glPushMatrix(); //gore
+    glPopMatrix();
+    const int coef_of_mapping=10; //koeficijent mapiranja teksture
+    glBindTexture(GL_TEXTURE_2D, texture_names[1]);
+    glPushMatrix(); //gornji zid
         glTranslatef((U_FROM+U_TO)/2,0,V_FROM);
-        glScalef(U_TO-U_FROM,1,1);
-        glutSolidCube(edge);
+        glScalef(U_TO-U_FROM,4,1);
+        glPushMatrix();
+            glBegin(GL_QUADS);
+                glTexCoord2f(0,0);
+                glVertex3f(-edge/2, -edge/2, edge/2);
+                glTexCoord2f(0, edge);
+                glVertex3f(-edge/2, edge/2, edge/2);
+                glTexCoord2f(edge*coef_of_mapping , edge);
+                glVertex3f(edge/2, edge/2, edge/2);
+                glTexCoord2f(edge*coef_of_mapping, 0);
+                glVertex3f(edge/2, -edge/2, edge/2);         
+                glEnd();
+            glutSolidCube(edge);
+        glPopMatrix();
     glPopMatrix();
-    glPushMatrix(); //dole
+    
+    glPushMatrix(); //donji zid
         glTranslatef(-(U_FROM+U_TO)/2,0,-V_FROM);
-        glScalef(U_TO-U_FROM,1,1);
-        glutSolidCube(edge);
+        glScalef(U_TO-U_FROM,4,1);
+        glPushMatrix();
+            glBegin(GL_QUADS);
+                glTexCoord2f(0, 0);
+                glVertex3f(-edge/2, -edge/2, edge/2);
+                glTexCoord2f(0, edge);
+                glVertex3f(-edge/2, edge/2, edge/2);
+                glTexCoord2f(edge*coef_of_mapping, edge);
+                glVertex3f(edge/2, edge/2, edge/2);
+                glTexCoord2f(edge*coef_of_mapping, 0);
+                glVertex3f(edge/2, -edge/2, edge/2);         
+                glEnd();
+            glutSolidCube(edge);
+        glPopMatrix();
     glPopMatrix();
-    glPushMatrix(); //levo
+   
+    glPushMatrix(); //levi zid
         glTranslatef(U_FROM,0,-(V_FROM+V_TO)/2);
-        glScalef(1,1,V_TO-V_FROM);
-        glutSolidCube(edge);
+       // glRotatef(90,0,1,0);
+        glScalef(1,4,V_TO-V_FROM);
+        glPushMatrix();
+            glBegin(GL_QUADS);
+                glTexCoord2f(0,0);
+                glVertex3f(edge/2, -edge/2,edge/2);
+                glTexCoord2f(0, edge);
+                glVertex3f(edge/2, edge/2,edge/2);
+                glTexCoord2f(edge*coef_of_mapping, edge);
+                glVertex3f(edge/2, edge/2,-edge/2);
+                glTexCoord2f(edge*coef_of_mapping, 0);
+                glVertex3f(edge/2, -edge/2,-edge/2);         
+                glEnd();
+            glutSolidCube(edge);
+        glPopMatrix();
     glPopMatrix();
-    glPushMatrix(); //desno
+  
+    glPushMatrix(); //desni zid
         glTranslatef(-U_FROM,0,(V_FROM+V_TO)/2);
-        glScalef(1,1,V_TO-V_FROM);
-        glutSolidCube(edge);
+       // glRotatef(90,0,1,0);
+        glScalef(1,4,V_TO-V_FROM);
+        glPushMatrix();
+            glBegin(GL_QUADS);
+                glTexCoord2f(0 , 0);
+                glVertex3f(-edge/2, -edge/2,edge/2);
+                glTexCoord2f(0, edge);
+                glVertex3f(-edge/2, edge/2,edge/2);
+                glTexCoord2f(-edge*coef_of_mapping , edge);
+                glVertex3f(-edge/2, edge/2,-edge/2);
+                glTexCoord2f(-edge*coef_of_mapping, 0);
+                glVertex3f(-edge/2, -edge/2,-edge/2);         
+            glEnd();
+            glutSolidCube(edge);
+        glPopMatrix();
     glPopMatrix();
-
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 static void draw_plane(int U_FROM, int U_TO, int V_FROM, int V_TO)
 {
     int u, v;
-  
     glPushMatrix();
-        {
+    {
             float material_ambient[] = { 0, 0, 0, 1 };
             float material_diffuse[] = { 1, 1, 1, 1 };
             float material_specular[] = { 0, 0, 0, 1 };
@@ -229,8 +301,7 @@ static void draw_plane(int U_FROM, int U_TO, int V_FROM, int V_TO)
                 glEnd();
             }
             glBindTexture(GL_TEXTURE_2D, 0);
-        }
-        
+    }   
     glPopMatrix();
 
 }
