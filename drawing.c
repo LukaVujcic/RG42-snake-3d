@@ -268,9 +268,9 @@ static void draw_border_of_terrain(int U_FROM, int U_TO, int V_FROM, int V_TO)
                 glVertex3f(-edge/2, -edge/2,edge/2);
                 glTexCoord2f(0, edge);
                 glVertex3f(-edge/2, edge/2,edge/2);
-                glTexCoord2f(-edge*coef_of_mapping , edge);
+                glTexCoord2f(edge*coef_of_mapping , edge);
                 glVertex3f(-edge/2, edge/2,-edge/2);
-                glTexCoord2f(-edge*coef_of_mapping, 0);
+                glTexCoord2f(edge*coef_of_mapping, 0);
                 glVertex3f(-edge/2, -edge/2,-edge/2);         
             glEnd();
             glutSolidCube(edge);
