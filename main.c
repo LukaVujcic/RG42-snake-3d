@@ -16,7 +16,7 @@ static int animation_ongoing;
 static void on_display()
 {
      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-     glClearColor(0,0.6,0.6,1);
+     glClearColor(135.0/255, 206.0/255, 250/255.0,1);
      glMatrixMode(GL_MODELVIEW);
      glLoadIdentity();
      gluLookAt(0, 22, 20.5, 
@@ -76,7 +76,8 @@ static void on_keyboard(unsigned char key, int x, int y)
         break;
     case 'b': //pokrecemo
         animation_ongoing=1;
-        glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ID);
+        if (animation_ongoing==0)
+            glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ID);
         break;
     }
     glutPostRedisplay();
