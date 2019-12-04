@@ -75,9 +75,12 @@ static void on_keyboard(unsigned char key, int x, int y)
         animation_ongoing=0;
         break;
     case 'b': //pokrecemo
-        animation_ongoing=1;
-        if (animation_ongoing==0)
+    
+        if (animation_ongoing==0){
+            animation_ongoing=1;
             glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ID);
+        }
+            
         break;
     }
     glutPostRedisplay();
