@@ -10,4 +10,5 @@ static void draw_plane(int U_FROM, int U_TO, int V_FROM, int V_TO); //crtanje ra
 void draw_terrain(const Terrain* terrain); //crtanje terena
 void init_light(void); //Inicijalizacija osvetljenja
 void init_texture(void); //Inicijalizacija tekstura
+static void apply_texture_cube(double edge,int texture_name); //Postavlja teksturu na proizvoljnu kocku
 #endif

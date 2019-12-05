@@ -1,9 +1,10 @@
 #include "drawing.h"
 #include "image.h"
 #include <GL/glut.h>
-static int texture_names[1];
+static int texture_names[2];
 #define FILENAME0 "wood.bmp"
 #define FILENAME1 "brick.bmp"
+#define FILENAME2 "skin.bmp"
 void init_texture(void)
 {
     /* Objekat koji predstavlja teskturu ucitanu iz fajla. */
@@ -23,7 +24,7 @@ void init_texture(void)
     image_read(image, FILENAME0);
 
     /* Generisu se identifikatori tekstura. */
-    glGenTextures(2, texture_names);
+    glGenTextures(3, texture_names);
 
     glBindTexture(GL_TEXTURE_2D, texture_names[0]);
     glTexParameteri(GL_TEXTURE_2D,
@@ -56,6 +57,21 @@ void init_texture(void)
                  image->width, image->height, 0,
                  GL_RGB, GL_UNSIGNED_BYTE, image->pixels);
     /* Oslobadjamo objekat iz memorije */
+    
+     image_read(image, FILENAME2);
+
+    glBindTexture(GL_TEXTURE_2D, texture_names[2]);
+     glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
+                 image->width, image->height, 0,
+                 GL_RGB, GL_UNSIGNED_BYTE, image->pixels);
     image_done(image);
 
 }
@@ -135,7 +151,7 @@ void draw_snake(Snake *snake)
         for (i=1;i<snake->size;i++)
         {
             /*Deo koda koji naizmenicno boji zmijicu*/
-           /* if (i&1)  
+            /*if (i&1)  
             {
                  glColor3f(0,0,1);
                  
@@ -144,20 +160,21 @@ void draw_snake(Snake *snake)
             {
                  glColor3f(0,1,0);
                 
-            }
-            */
+            }*/
+            
             glPushMatrix();
             {
                 float material_ambient[] = { 0, 0, 1, 1 };
                 float material_diffuse[] = { 0, 0, 1, 1 };
-                float material_specular[] = { 0.3, 0.3, 0.3, 1 };
+                float material_specular[] = { 0.7, 0.7, 0.7, 1 };
                // float high_shininess[] = { 4};
                 glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, material_ambient);
                 glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, material_diffuse);
                 glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, material_specular);
                 //glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, high_shininess);
                 glTranslatef(snake->body[i].x,snake->body[i].y,snake->body[i].z);
-                glutSolidCube(edge);
+                apply_texture_cube(edge,texture_names[2]);
+                //glutSolidCube(edge);
             }
                 
             glPopMatrix();
@@ -179,6 +196,90 @@ static void set_vertex_and_normal(double u, double v,double (*function)(double,d
     //Tacka koju iscrtavamo
     glVertex3f(u, function(u, v), v);
 
+}
+static void apply_texture_cube(double edge,int texture)
+{
+    int coef_of_mapping=1;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glPushMatrix(); //prednja strana
+        
+            glBegin(GL_QUADS);
+                glTexCoord2f(0,0);
+                glVertex3f(-edge/2, -edge/2, edge/2);
+                glTexCoord2f(0, edge);
+                glVertex3f(-edge/2, edge/2, edge/2);
+                glTexCoord2f(edge*coef_of_mapping , edge);
+                glVertex3f(edge/2, edge/2, edge/2);
+                glTexCoord2f(edge*coef_of_mapping, 0);
+                glVertex3f(edge/2, -edge/2, edge/2);         
+            glEnd();
+    glPopMatrix();
+    
+     //zadnja strana
+    glPushMatrix(); 
+    
+            glBegin(GL_QUADS);
+                glTexCoord2f(0, 0);
+                glVertex3f(-edge/2, -edge/2, edge/2);
+                glTexCoord2f(0, edge);
+                glVertex3f(-edge/2, edge/2, edge/2);
+                glTexCoord2f(edge*coef_of_mapping, edge);
+                glVertex3f(edge/2, edge/2, edge/2);
+                glTexCoord2f(edge*coef_of_mapping, 0);
+                glVertex3f(edge/2, -edge/2, edge/2);         
+            glEnd();
+        
+    glPopMatrix();
+   
+    glPushMatrix(); //leva strana
+        
+            glBegin(GL_QUADS);
+                glTexCoord2f(0,0);
+                glVertex3f(-edge/2, -edge/2,edge/2);
+                glTexCoord2f(0, edge);
+                glVertex3f(-edge/2, edge/2,edge/2);
+                glTexCoord2f(edge*coef_of_mapping, edge);
+                glVertex3f(-edge/2, edge/2,-edge/2);
+                glTexCoord2f(edge*coef_of_mapping, 0);
+                glVertex3f(-edge/2, -edge/2,-edge/2);         
+                glEnd();
+
+        
+    glPopMatrix();
+
+    glPushMatrix(); //gornja strana
+        
+            glBegin(GL_QUADS);
+                glTexCoord2f(0,0);
+                glVertex3f(-edge/2+, edge/2,edge/2);
+                glTexCoord2f(0, edge);
+                glVertex3f(-edge/2, edge/2,-edge/2);
+                glTexCoord2f(edge*coef_of_mapping, edge);
+                glVertex3f(edge/2, edge/2,-edge/2);
+                glTexCoord2f(edge*coef_of_mapping, 0);
+                glVertex3f(edge/2, edge/2,edge/2);         
+            glEnd();
+
+        
+    glPopMatrix();
+
+    glPushMatrix(); //desna strana
+        
+            glBegin(GL_QUADS);
+                glTexCoord2f(0 , 0);
+                glVertex3f(-edge/2, -edge/2,edge/2);
+                glTexCoord2f(0, edge);
+                glVertex3f(-edge/2, edge/2,edge/2);
+                glTexCoord2f(edge*coef_of_mapping , edge);
+                glVertex3f(-edge/2, edge/2,-edge/2);
+                glTexCoord2f(edge*coef_of_mapping, 0);
+                glVertex3f(-edge/2, -edge/2,-edge/2);         
+            glEnd();
+          
+        
+    glPopMatrix();
+    glutSolidCube(edge);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 static double function_plane(double u,double v)//funkcija je f(u,v)=c, zadaje ravan y=c
 {
