@@ -1,7 +1,7 @@
 #include "drawing.h"
 #include "image.h"
 #include <GL/glut.h>
-static int texture_names[2];
+static int texture_names[3];
 #define FILENAME0 "wood.bmp"
 #define FILENAME1 "brick.bmp"
 #define FILENAME2 "skin.bmp"
@@ -166,7 +166,7 @@ void draw_snake(Snake *snake)
             {
                 float material_ambient[] = { 0, 0, 1, 1 };
                 float material_diffuse[] = { 0, 0, 1, 1 };
-                float material_specular[] = { 0.7, 0.7, 0.7, 1 };
+                float material_specular[] = { 1, 1, 1, 1 };
                // float high_shininess[] = { 4};
                 glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, material_ambient);
                 glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, material_diffuse);
@@ -220,32 +220,18 @@ static void apply_texture_cube(double edge,int texture)
     
             glBegin(GL_QUADS);
                 glTexCoord2f(0, 0);
-                glVertex3f(-edge/2, -edge/2, edge/2);
+                glVertex3f(-edge/2, -edge/2, -edge/2);
                 glTexCoord2f(0, edge);
-                glVertex3f(-edge/2, edge/2, edge/2);
+                glVertex3f(-edge/2, edge/2, -edge/2);
                 glTexCoord2f(edge*coef_of_mapping, edge);
-                glVertex3f(edge/2, edge/2, edge/2);
+                glVertex3f(edge/2, edge/2, -edge/2);
                 glTexCoord2f(edge*coef_of_mapping, 0);
-                glVertex3f(edge/2, -edge/2, edge/2);         
+                glVertex3f(edge/2, -edge/2, -edge/2);         
             glEnd();
         
     glPopMatrix();
    
-    glPushMatrix(); //leva strana
-        
-            glBegin(GL_QUADS);
-                glTexCoord2f(0,0);
-                glVertex3f(-edge/2, -edge/2,edge/2);
-                glTexCoord2f(0, edge);
-                glVertex3f(-edge/2, edge/2,edge/2);
-                glTexCoord2f(edge*coef_of_mapping, edge);
-                glVertex3f(-edge/2, edge/2,-edge/2);
-                glTexCoord2f(edge*coef_of_mapping, 0);
-                glVertex3f(-edge/2, -edge/2,-edge/2);         
-                glEnd();
-
-        
-    glPopMatrix();
+    
 
     glPushMatrix(); //gornja strana
         
@@ -263,17 +249,32 @@ static void apply_texture_cube(double edge,int texture)
         
     glPopMatrix();
 
+    glPushMatrix(); //leva strana
+        
+            glBegin(GL_QUADS);
+                glTexCoord2f(0,0);
+                glVertex3f(-edge/2, -edge/2,edge/2);
+                glTexCoord2f(0, edge);
+                glVertex3f(-edge/2, edge/2,edge/2);
+                glTexCoord2f(edge*coef_of_mapping, edge);
+                glVertex3f(-edge/2, edge/2,-edge/2);
+                glTexCoord2f(edge*coef_of_mapping, 0);
+                glVertex3f(-edge/2, -edge/2,-edge/2);         
+            glEnd();
+
+        
+    glPopMatrix();
     glPushMatrix(); //desna strana
         
             glBegin(GL_QUADS);
                 glTexCoord2f(0 , 0);
-                glVertex3f(-edge/2, -edge/2,edge/2);
+                glVertex3f(edge/2, -edge/2,edge/2);
                 glTexCoord2f(0, edge);
-                glVertex3f(-edge/2, edge/2,edge/2);
+                glVertex3f(edge/2, edge/2,edge/2);
                 glTexCoord2f(edge*coef_of_mapping , edge);
-                glVertex3f(-edge/2, edge/2,-edge/2);
+                glVertex3f(edge/2, edge/2,-edge/2);
                 glTexCoord2f(edge*coef_of_mapping, 0);
-                glVertex3f(-edge/2, -edge/2,-edge/2);         
+                glVertex3f(edge/2, -edge/2,-edge/2);         
             glEnd();
           
         
@@ -386,7 +387,7 @@ static void draw_plane(int U_FROM, int U_TO, int V_FROM, int V_TO)
     glPushMatrix();
     {
             float material_ambient[] = { 0, 0, 0, 1 };
-            float material_diffuse[] = { 1, 1, 1, 1 };
+            float material_diffuse[] = { 0.7, 0.7, 0.7, 1 };
             float material_specular[] = { 0, 0, 0, 1 };
             //float high_shininess[] = { 4 };
             glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, material_ambient);
