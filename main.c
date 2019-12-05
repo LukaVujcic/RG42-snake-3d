@@ -19,10 +19,11 @@ static void on_display()
      glClearColor(135.0/255, 206.0/255, 250/255.0,1);
      glMatrixMode(GL_MODELVIEW);
      glLoadIdentity();
-     gluLookAt(0, 22, 20.5, 
+     gluLookAt(0, 22, 21, 
                 0, 0, 0
                 , 0, 1, 0);
      //draw_coordinate_system();
+     
      draw_snake(&snake);
      draw_food(&food);
      draw_terrain(&terrain);
