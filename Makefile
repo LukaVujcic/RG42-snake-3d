@@ -1,4 +1,4 @@
-PROGRAM = Snake3D
+PROGRAM = Snake3D.out
 CC = gcc
 LDLIBS  = -lglut -lGLU -lGL -lm
 CFLAGS  = -g -std=c99 -Wall -I/usr/X11R6/include -I/usr/pkg/include
