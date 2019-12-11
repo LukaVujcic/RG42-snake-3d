@@ -6,4 +6,5 @@ static int generate_random_number(int a, int b); //Generise dva nasumicna broja,
 void init_game(Snake *snake, Food *food,int *animation_ongoing,Terrain *terrain); //Funkcija u kojoj inicijalizujemo sve potrebne parametre
 int is_food_eaten(const Snake *snake,const Food *food); //Detekcija da li je hrana pojedena
 void size_up(Snake *snake, int n); //Funkcija za uvecanje zmijice za tacno n polja
+void increase_score(Snake* snake, int val); //uvecava score za val;
 #endif

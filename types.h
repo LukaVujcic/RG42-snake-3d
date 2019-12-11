@@ -8,6 +8,7 @@ typedef struct {
     Point *body;
     Point direction; /*Vektor koji pokazuje trenutni smer/pravac kretanja zmijice*/
     int size;
+    int score;
 } Snake;
 
 typedef struct { /*TO DO obavezno dodati razlicite tipove hrane*/

@@ -13,6 +13,7 @@ static void on_reshape(int width, int height);
 static void on_display(void); 
 static int animation_ongoing;
 //TO DO Implementirati mehanizam za oslobadjanje memorije
+
 static void on_display()
 {
      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -23,10 +24,10 @@ static void on_display()
                 0, 0, 0
                 , 0, 1, 0);
      //draw_coordinate_system();
-     
      draw_snake(&snake);
      draw_food(&food);
      draw_terrain(&terrain);
+     draw_score(&snake);
      glutSwapBuffers();
 }
 
@@ -37,8 +38,10 @@ static void on_timer(int value)
     move_snake(&snake,&terrain);
     if (is_food_eaten(&snake,&food)) //Da li smo pojeli hranu
     {
+        increase_score(&snake,1); //uvecavamo skor za 1
         generate_food_position(&food.position.x,&food.position.z);  //Posto je hrana pojedena generisemo novu hranu
         size_up(&snake,1); //povecavamo zmijicu za 1 polje
+       
     }
     glutPostRedisplay();
     if (animation_ongoing) {

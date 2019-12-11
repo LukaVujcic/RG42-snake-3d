@@ -30,6 +30,7 @@ void init_game(Snake *snake, Food *food,int *animation_ongoing,Terrain *terrain)
     terrain->U_TO=17;
     terrain->V_FROM=-15;
     terrain->V_TO=15;
+    snake->score=0;
 }
 static int generate_random_number(int a, int b)
 {
@@ -52,7 +53,10 @@ int is_food_eaten(const Snake *snake,const Food *food)
         return 1;
     }
     return 0;
-    
+}
+void increase_score(Snake* snake, int val) 
+{
+    snake->score+=val;
 }
 void size_up(Snake *snake, int n)
 {

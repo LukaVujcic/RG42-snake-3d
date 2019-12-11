@@ -1,10 +1,43 @@
 #include "drawing.h"
 #include "image.h"
 #include <GL/glut.h>
+#include <string.h>
+#include <stdio.h>
 static int texture_names[3];
 #define FILENAME0 "wood.bmp"
 #define FILENAME1 "brick.bmp"
 #define FILENAME2 "skin.bmp"
+
+static void renderBitmapString(int x, int y,int z,void* font, char *string)
+{
+    int len; //duzina stringa
+    glDisable(GL_LIGHTING); //Privremeno iskljucujemo osvetljenje da bi postavili boju teksta
+    glColor3f(1,0,0); //Postavljanje boje teksta
+    glRasterPos3f(x,y,z);
+    len = strlen(string);
+    for (int i = 0; i < len; i++) 
+    {
+        glutBitmapCharacter(font, string[i]);
+    }
+    glEnable(GL_LIGHTING); //Ponovo ukljucujemo osvetljenje
+}
+void draw_score(const Snake* snake)
+{
+    char *word=NULL;
+    const int maxLength=50; //pretpostavicemo da ispis nije veci od 50 karaktera
+    word=(char*)malloc(sizeof(char)*maxLength);
+    if (word==NULL)
+    {
+        //Doslo je do greske, mozemo postaviti funkciju za obradu
+        exit(EXIT_FAILURE);
+    }
+    sprintf(word,"Score: %d",snake->score);
+    /* Postavljamo koordinate ispisivanja teksta*/
+    const int x = 0;
+    const int y = 13;
+    const int z = 0;
+    renderBitmapString(x,y,z,GLUT_BITMAP_TIMES_ROMAN_24,word);
+}
 void init_texture(void)
 {
     /* Objekat koji predstavlja teskturu ucitanu iz fajla. */
@@ -58,10 +91,10 @@ void init_texture(void)
                  GL_RGB, GL_UNSIGNED_BYTE, image->pixels);
     /* Oslobadjamo objekat iz memorije */
     
-     image_read(image, FILENAME2);
+    image_read(image, FILENAME2);
 
     glBindTexture(GL_TEXTURE_2D, texture_names[2]);
-     glTexParameteri(GL_TEXTURE_2D,
+    glTexParameteri(GL_TEXTURE_2D,
                     GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D,
                     GL_TEXTURE_WRAP_T, GL_REPEAT);
