@@ -1,7 +1,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "image.h"
+#include "../Headers/image.h"
 /*Kod je u potpunosti preuzet sa adrese http://www.matf.bg.ac.rs/p/rastko-djordjevic/cas/2805/cas-7/ */
 Image *image_init(int width, int height) {
 

@@ -1,6 +1,6 @@
-#include "types.h"
-#include "logic.h"
-#include "map.h"
+#include "../Headers/types.h"
+#include "../Headers/logic.h"
+#include "../Headers/map.h"
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>

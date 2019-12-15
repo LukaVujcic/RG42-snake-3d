@@ -1,4 +1,4 @@
-#include "map.h"
+#include "../Headers/map.h"
 #include <stdlib.h>
 const int depth_move=3; //koristimo kao pomeraj jer ne mozemo da mapiramo negativne vrednosti pomocu code
 static int offset(int x, int y, int z,int row_num,int col_num) 

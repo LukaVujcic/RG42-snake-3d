@@ -1,9 +1,9 @@
 #include <GL/glut.h>
 #include <stdio.h>
-#include "drawing.h"
-#include "types.h"
-#include "logic.h"
-#include "map.h"
+#include "../Headers/drawing.h"
+#include "../Headers/types.h"
+#include "../Headers/logic.h"
+#include "../Headers/map.h"
 #define TIMER_ID 0
 #define TIMER_INTERVAL 100
 static Snake snake;

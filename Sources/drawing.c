@@ -1,12 +1,12 @@
-#include "drawing.h"
-#include "image.h"
+#include "../Headers/drawing.h"
+#include "../Headers/image.h"
 #include <GL/glut.h>
 #include <string.h>
 #include <stdio.h>
 static int texture_names[3];
-#define FILENAME0 "wood.bmp"
-#define FILENAME1 "brick.bmp"
-#define FILENAME2 "skin.bmp"
+#define FILENAME0 "../Textures/wood.bmp"
+#define FILENAME1 "../Textures/brick.bmp"
+#define FILENAME2 "../Textures/skin.bmp"
 
 static void renderBitmapString(int x, int y,int z,void* font, char *string)
 {
