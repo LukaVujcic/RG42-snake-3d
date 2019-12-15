@@ -3,8 +3,9 @@
 #include "drawing.h"
 #include "types.h"
 #include "logic.h"
+#include "map.h"
 #define TIMER_ID 0
-#define TIMER_INTERVAL 200
+#define TIMER_INTERVAL 100
 static Snake snake;
 static Food food;
 static Terrain terrain;
@@ -39,7 +40,11 @@ static void on_timer(int value)
     if (is_food_eaten(&snake,&food)) //Da li smo pojeli hranu
     {
         increase_score(&snake,1); //uvecavamo skor za 1
-        generate_food_position(&food.position.x,&food.position.z);  //Posto je hrana pojedena generisemo novu hranu
+        //Generisemo hranu dok ne dodjemo do slobodnog mesta
+        do
+        {
+            generate_food_position(&food.position.x,&food.position.z);  //Posto je hrana pojedena generisemo novu hranu
+        } while (is_field_free(terrain.free_fields, food.position.x, food.position.z,terrain.row_num,terrain.col_num));
         size_up(&snake,1); //povecavamo zmijicu za 1 polje
        
     }

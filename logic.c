@@ -1,28 +1,21 @@
 #include "types.h"
 #include "logic.h"
+#include "map.h"
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
-
 void init_game(Snake *snake, Food *food,int *animation_ongoing,Terrain *terrain)
 {
     srand(time(NULL)); //Incijalizacija seed-a
-    const int size=2; /*duzina zmijice*/
+    const int size=5; /*duzina zmijice*/
     const int max_size=500; //velicina zmijice nece biti preko 500
-    snake->body=malloc(sizeof(Point)*(500));
+    snake->body=malloc(sizeof(Point)*(max_size));
     snake->size=size;
-    int i;
-    for (i=0;i<size;i++)
-    {
-        snake->body[i].x=i;
-        snake->body[i].y=0;
-        snake->body[i].z=0;
-    }
     snake->direction.x=-1;
     snake->direction.z=0;
-    snake->direction.x=-1;
+   // snake->direction.x=-1;
     generate_food_position(&food->position.x,&food->position.z);
     food->position.y=0;
     *animation_ongoing = 1;
@@ -31,7 +24,25 @@ void init_game(Snake *snake, Food *food,int *animation_ongoing,Terrain *terrain)
     terrain->V_FROM=-15;
     terrain->V_TO=15;
     snake->score=0;
+    int *free_fields=NULL;
+    terrain->row_num=terrain->V_TO-terrain->V_FROM+1; //broj vrsta
+    terrain->col_num=terrain->U_TO-terrain->U_FROM+1; //broj kolona
+    int depth_num=7; //treba ce nam 7 matrice za mapiranje
+    free_fields=malloc(sizeof(int)*terrain->row_num*terrain->col_num*depth_num+1);
+    if (free_fields==NULL)
+    {
+        exit(EXIT_FAILURE);
+    }
+    for (int i=0;i<size;i++)
+    {
+        snake->body[i].x=i;
+        snake->body[i].y=0;
+        snake->body[i].z=0;
+        set_field(free_fields,snake->body[i].x,snake->body[i].y,1,terrain->row_num,terrain->col_num);
+    }
+    terrain->free_fields=free_fields;
 }
+
 static int generate_random_number(int a, int b)
 {
     /* b > a */
@@ -41,8 +52,8 @@ static int generate_random_number(int a, int b)
 }
 void generate_food_position(int *x, int *z)
 {
-    const int low=-12;
-    const int high=12;
+    const int low=-14;
+    const int high=14;
     *x=generate_random_number(low,high);
     *z=generate_random_number(low,high);
 }
@@ -96,6 +107,7 @@ void move_snake(Snake *snake,const Terrain *terrain)
 {
     //printf("%d\n",generate_random_number(2,10));
     int i;
+    set_field(terrain->free_fields,snake->body[snake->size-1].x,snake->body[snake->size-1].z,0,terrain->row_num,terrain->col_num);
     /*Deo koda koji pomera zmijicu i detektuje ako je bilo kolizije*/
     for (i=snake->size-1;i>0;i--)
     {
@@ -111,6 +123,7 @@ void move_snake(Snake *snake,const Terrain *terrain)
     snake->body[0].x+=snake->direction.x;
     snake->body[0].y+=snake->direction.y;
     snake->body[0].z+=snake->direction.z;
+    set_field(terrain->free_fields,snake->body[0].x,snake->body[0].z,1,terrain->row_num,terrain->col_num);
     
        
 }
