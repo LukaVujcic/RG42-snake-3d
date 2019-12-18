@@ -7,8 +7,9 @@ static int texture_names[3];
 #define FILENAME0 "../Textures/wood.bmp"
 #define FILENAME1 "../Textures/brick.bmp"
 #define FILENAME2 "../Textures/skin.bmp"
-
-static void renderStrokeString(int x, int y,int z,void* font, char *string)
+#define MAX_LENGTH_STRING 50
+static char word[MAX_LENGTH_STRING]; //Koristimo staticku alokaciju za reci koje ispisujemo, dali smo pretpostavku o njihovoj duzini
+static void renderStrokeString(int x, int y,int z,void* font, char *string) 
 {
     int len; //duzina stringa
     glDisable(GL_LIGHTING); //Privremeno iskljucujemo osvetljenje da bi postavili boju teksta
@@ -26,14 +27,6 @@ static void renderStrokeString(int x, int y,int z,void* font, char *string)
 }
 void draw_score(const Snake* snake)
 {
-    char *word=NULL;
-    const int maxLength=50; //pretpostavicemo da ispis nije veci od 50 karaktera
-    word=(char*)malloc(sizeof(char)*maxLength);
-    if (word==NULL)
-    {
-        //Doslo je do greske, mozemo postaviti funkciju za obradu
-        exit(EXIT_FAILURE);
-    }
     sprintf(word,"Score: %d",snake->score);
     /* Postavljamo koordinate ispisivanja teksta*/
     const int x = -350;
@@ -43,6 +36,36 @@ void draw_score(const Snake* snake)
         glPushAttrib(GL_LINE_BIT);
             glLineWidth(4); //Postavljamo debljinu linije
             renderStrokeString(x,y,z,GLUT_STROKE_MONO_ROMAN,word);
+        glPopAttrib();
+    glPopMatrix();
+}
+void draw_game_over(const Snake* snake)
+{   
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt(0, 0, 1, 
+                    0, 0, 0
+                    , 0, 1, 0);
+    //Koordinate za ispis teksta
+    const int x = -500;
+    const int y = 0;
+    const int z = 0;
+    /*Deo za ispisivanje "game over"*/
+    sprintf(word,"Game over!");
+    glPushMatrix();
+        glScalef(0.05,0.05,5);
+        glPushAttrib(GL_LINE_BIT);
+            glLineWidth(4); //Postavljamo debljinu linije
+            renderStrokeString(x,y,z,GLUT_STROKE_MONO_ROMAN,word);
+        glPopAttrib();
+    glPopMatrix();
+    /*Deo za ispisivanje skora*/
+    sprintf(word,"Score: %d",snake->score);
+    glPushMatrix();
+        glScalef(0.05,0.05,5);
+        glPushAttrib(GL_LINE_BIT);
+            glLineWidth(4); //Postavljamo debljinu linije
+            renderStrokeString(x+100,y-200,z,GLUT_STROKE_MONO_ROMAN,word);
         glPopAttrib();
     glPopMatrix();
 }

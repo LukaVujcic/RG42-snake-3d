@@ -16,21 +16,30 @@ static int animation_ongoing;
 static int TIMER_INTERVAL_SNAKE_INIT=100; //pocinjemo sa 100ms
 static int TIMER_INTERVAL_SNAKE_CURR; //zadajemo trenutni interval tajmera
 //TO DO Implementirati mehanizam za oslobadjanje memorije
-
+int is_game_over=0;
 static void on_display()
 {
      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
      glClearColor(135.0/255, 206.0/255, 250/255.0,1);
-     glMatrixMode(GL_MODELVIEW);
-     glLoadIdentity();
-     gluLookAt(0, 22, 21, 
-                0, 0, 0
-                , 0, 1, 0);
-     //draw_coordinate_system();
-     draw_snake(&snake);
-     draw_food(&food);
-     draw_terrain(&terrain);
-     draw_score(&snake);
+     if (!is_game_over)
+     {
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        gluLookAt(0, 22, 21, 
+                    0, 0, 0
+                    , 0, 1, 0);
+        //draw_coordinate_system();
+        draw_snake(&snake);
+        draw_food(&food);
+        draw_terrain(&terrain);
+        draw_score(&snake);
+     }
+     else
+     {
+         draw_game_over(&snake);
+     }
+     
+    
      glutSwapBuffers();
 }
 
@@ -65,6 +74,7 @@ static void on_keyboard(unsigned char key, int x, int y)
 {
     switch (key) {
     case 27:
+        
         exit(EXIT_SUCCESS);
         break;
     case 'a':

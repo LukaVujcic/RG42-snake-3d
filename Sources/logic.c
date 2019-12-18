@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
+int is_game_over;
 void init_game(Snake *snake, Food *food,int *animation_ongoing,Terrain *terrain)
 {
     srand(time(NULL)); //Incijalizacija seed-a
@@ -114,7 +115,8 @@ void move_snake(Snake *snake,const Terrain *terrain)
         //Detektovanje "SAMOUJEDA"
         if (snake->body[i].x==snake->body[0].x+snake->direction.x && snake->body[i].y==snake->body[0].y+snake->direction.y && snake->body[i].z==snake->body[0].z+snake->direction.z || (is_snake_touch_border(snake,terrain)))
         {
-            exit(0);      
+            is_game_over=1;
+            //exit(0);      
         }
         snake->body[i].x=snake->body[i-1].x;
         snake->body[i].y=snake->body[i-1].y;

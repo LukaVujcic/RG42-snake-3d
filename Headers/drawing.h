@@ -12,5 +12,6 @@ void init_light(void); //Inicijalizacija osvetljenja
 void init_texture(void); //Inicijalizacija tekstura
 static void apply_texture_cube(double edge,int texture_name); //Postavlja teksturu na proizvoljnu kocku
 static void renderStrokeString(int x, int y,int z,void* font, char *string);
-void draw_score(const Snake* snake);
+void draw_score(const Snake* snake); //funkcija iscrtava skor
+void draw_game_over(const Snake* snake);
 #endif
