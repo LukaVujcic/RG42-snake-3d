@@ -5,7 +5,7 @@
 #include "../Headers/logic.h"
 #include "../Headers/map.h"
 #define TIMER_ID 0
-#define TIMER_INTERVAL 100
+
 static Snake snake;
 static Food food;
 static Terrain terrain;
@@ -13,6 +13,8 @@ static void on_keyboard(unsigned char key, int x, int y);
 static void on_reshape(int width, int height);
 static void on_display(void); 
 static int animation_ongoing;
+static int TIMER_INTERVAL_SNAKE_INIT=100; //pocinjemo sa 100ms
+static int TIMER_INTERVAL_SNAKE_CURR; //zadajemo trenutni interval tajmera
 //TO DO Implementirati mehanizam za oslobadjanje memorije
 
 static void on_display()
@@ -40,6 +42,11 @@ static void on_timer(int value)
     if (is_food_eaten(&snake,&food)) //Da li smo pojeli hranu
     {
         increase_score(&snake,1); //uvecavamo skor za 1
+        if (TIMER_INTERVAL_SNAKE_CURR>50) // ne dozvoljavamo da bude prebrzo
+        {
+            const int coef_of_speed=5; //zadajemo koef za koji se menja brzina na svakih 5 bodova 
+            TIMER_INTERVAL_SNAKE_CURR=TIMER_INTERVAL_SNAKE_INIT-coef_of_speed*snake.score/5;
+        }
         //Generisemo hranu dok ne dodjemo do slobodnog mesta
         do
         {
@@ -50,7 +57,7 @@ static void on_timer(int value)
     }
     glutPostRedisplay();
     if (animation_ongoing) {
-        glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ID);
+        glutTimerFunc(TIMER_INTERVAL_SNAKE_CURR, on_timer, TIMER_ID);
     }
 }
 
@@ -87,7 +94,7 @@ static void on_keyboard(unsigned char key, int x, int y)
     
         if (animation_ongoing==0){
             animation_ongoing=1;
-            glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ID);
+            glutTimerFunc(TIMER_INTERVAL_SNAKE_CURR, on_timer, TIMER_ID);
         }
             
         break;
@@ -122,7 +129,8 @@ int main(int argc,char** argv)
     init_game(&snake,&food,&animation_ongoing,&terrain);
     init_light();
     init_texture();
-    glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ID);
+    glutTimerFunc(TIMER_INTERVAL_SNAKE_CURR, on_timer, TIMER_ID);
+    TIMER_INTERVAL_SNAKE_CURR=TIMER_INTERVAL_SNAKE_INIT; //inicijalizujemo trenutni tajmer zmijice
     glEnable(GL_DEPTH_TEST); //Ukljucujemo mogucnosti prikazivanja u 3D
     glutMainLoop();
     return 0;

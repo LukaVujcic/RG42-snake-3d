@@ -52,8 +52,8 @@ static int generate_random_number(int a, int b)
 }
 void generate_food_position(int *x, int *z)
 {
-    const int low=-14;
-    const int high=14;
+    const int low=-13;
+    const int high=13;
     *x=generate_random_number(low,high);
     *z=generate_random_number(low,high);
 }

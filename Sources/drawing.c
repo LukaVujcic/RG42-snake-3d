@@ -8,16 +8,19 @@ static int texture_names[3];
 #define FILENAME1 "../Textures/brick.bmp"
 #define FILENAME2 "../Textures/skin.bmp"
 
-static void renderBitmapString(int x, int y,int z,void* font, char *string)
+static void renderStrokeString(int x, int y,int z,void* font, char *string)
 {
     int len; //duzina stringa
     glDisable(GL_LIGHTING); //Privremeno iskljucujemo osvetljenje da bi postavili boju teksta
     glColor3f(1,0,0); //Postavljanje boje teksta
-    glRasterPos3f(x,y,z);
+    //glRasterPos3f(x,y,z);
+    //Postavljamo dimenzije slova
+    glScalef(0.01,0.01,5);
+    glTranslatef(x,y,z);
     len = strlen(string);
-    for (int i = 0; i < len; i++) 
+    for (int i = 0; i < len; i++)
     {
-        glutBitmapCharacter(font, string[i]);
+        glutStrokeCharacter(font, string[i]);
     }
     glEnable(GL_LIGHTING); //Ponovo ukljucujemo osvetljenje
 }
@@ -33,10 +36,15 @@ void draw_score(const Snake* snake)
     }
     sprintf(word,"Score: %d",snake->score);
     /* Postavljamo koordinate ispisivanja teksta*/
-    const int x = 0;
-    const int y = 13;
+    const int x = -350;
+    const int y = 1200;
     const int z = 0;
-    renderBitmapString(x,y,z,GLUT_BITMAP_TIMES_ROMAN_24,word);
+    glPushMatrix();
+        glPushAttrib(GL_LINE_BIT);
+            glLineWidth(4); //Postavljamo debljinu linije
+            renderStrokeString(x,y,z,GLUT_STROKE_MONO_ROMAN,word);
+        glPopAttrib();
+    glPopMatrix();
 }
 void init_texture(void)
 {
@@ -90,7 +98,7 @@ void init_texture(void)
                  image->width, image->height, 0,
                  GL_RGB, GL_UNSIGNED_BYTE, image->pixels);
     /* Oslobadjamo objekat iz memorije */
-    
+
     image_read(image, FILENAME2);
 
     glBindTexture(GL_TEXTURE_2D, texture_names[2]);
@@ -129,7 +137,7 @@ void draw_coordinate_system()
     glPopMatrix();
     glPushMatrix();
         glColor3f(0,1,0); /* y-osa */
-        glBegin(GL_LINES); 
+        glBegin(GL_LINES);
             glVertex3f(0,-100,0);
             glVertex3f(0,100,0);
         glEnd();
@@ -141,7 +149,7 @@ void draw_coordinate_system()
             glVertex3f(0,0,-100);
         glEnd();
     glPopMatrix();
-} 
+}
 void draw_food(const Food *food)
 {
     double edge=1;
@@ -173,7 +181,7 @@ void draw_snake(Snake *snake)
                 glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, material_diffuse);
                 glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, material_specular);
                // glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
-                
+
                // glColor3f(1,0,0);
                 glTranslatef(snake->body[0].x,snake->body[0].y,snake->body[0].z);
                 glutSolidCube(edge);
@@ -184,17 +192,17 @@ void draw_snake(Snake *snake)
         for (i=1;i<snake->size;i++)
         {
             /*Deo koda koji naizmenicno boji zmijicu*/
-            /*if (i&1)  
+            /*if (i&1)
             {
                  glColor3f(0,0,1);
-                 
+
             }
             else
             {
                  glColor3f(0,1,0);
-                
+
             }*/
-            
+
             glPushMatrix();
             {
                 float material_ambient[] = { 0, 0, 1, 1 };
@@ -209,7 +217,7 @@ void draw_snake(Snake *snake)
                 apply_texture_cube(edge,texture_names[2]);
                 //glutSolidCube(edge);
             }
-                
+
             glPopMatrix();
         }
 }
@@ -235,7 +243,7 @@ static void apply_texture_cube(double edge,int texture)
     int coef_of_mapping=1;
     glBindTexture(GL_TEXTURE_2D, texture);
     glPushMatrix(); //prednja strana
-        
+
             glBegin(GL_QUADS);
                 glTexCoord2f(0,0);
                 glVertex3f(-edge/2, -edge/2, edge/2);
@@ -244,13 +252,13 @@ static void apply_texture_cube(double edge,int texture)
                 glTexCoord2f(edge*coef_of_mapping , edge);
                 glVertex3f(edge/2, edge/2, edge/2);
                 glTexCoord2f(edge*coef_of_mapping, 0);
-                glVertex3f(edge/2, -edge/2, edge/2);         
+                glVertex3f(edge/2, -edge/2, edge/2);
             glEnd();
     glPopMatrix();
-    
+
      //zadnja strana
-    glPushMatrix(); 
-    
+    glPushMatrix();
+
             glBegin(GL_QUADS);
                 glTexCoord2f(0, 0);
                 glVertex3f(-edge/2, -edge/2, -edge/2);
@@ -259,15 +267,15 @@ static void apply_texture_cube(double edge,int texture)
                 glTexCoord2f(edge*coef_of_mapping, edge);
                 glVertex3f(edge/2, edge/2, -edge/2);
                 glTexCoord2f(edge*coef_of_mapping, 0);
-                glVertex3f(edge/2, -edge/2, -edge/2);         
+                glVertex3f(edge/2, -edge/2, -edge/2);
             glEnd();
-        
+
     glPopMatrix();
-   
-    
+
+
 
     glPushMatrix(); //gornja strana
-        
+
             glBegin(GL_QUADS);
                 glTexCoord2f(0,0);
                 glVertex3f(-edge/2, edge/2,edge/2);
@@ -276,14 +284,14 @@ static void apply_texture_cube(double edge,int texture)
                 glTexCoord2f(edge*coef_of_mapping, edge);
                 glVertex3f(edge/2, edge/2,-edge/2);
                 glTexCoord2f(edge*coef_of_mapping, 0);
-                glVertex3f(edge/2, edge/2,edge/2);         
+                glVertex3f(edge/2, edge/2,edge/2);
             glEnd();
 
-        
+
     glPopMatrix();
 
     glPushMatrix(); //leva strana
-        
+
             glBegin(GL_QUADS);
                 glTexCoord2f(0,0);
                 glVertex3f(-edge/2, -edge/2,edge/2);
@@ -292,13 +300,13 @@ static void apply_texture_cube(double edge,int texture)
                 glTexCoord2f(edge*coef_of_mapping, edge);
                 glVertex3f(-edge/2, edge/2,-edge/2);
                 glTexCoord2f(edge*coef_of_mapping, 0);
-                glVertex3f(-edge/2, -edge/2,-edge/2);         
+                glVertex3f(-edge/2, -edge/2,-edge/2);
             glEnd();
 
-        
+
     glPopMatrix();
     glPushMatrix(); //desna strana
-        
+
             glBegin(GL_QUADS);
                 glTexCoord2f(0 , 0);
                 glVertex3f(edge/2, -edge/2,edge/2);
@@ -307,10 +315,10 @@ static void apply_texture_cube(double edge,int texture)
                 glTexCoord2f(edge*coef_of_mapping , edge);
                 glVertex3f(edge/2, edge/2,-edge/2);
                 glTexCoord2f(edge*coef_of_mapping, 0);
-                glVertex3f(edge/2, -edge/2,-edge/2);         
+                glVertex3f(edge/2, -edge/2,-edge/2);
             glEnd();
-          
-        
+
+
     glPopMatrix();
     glutSolidCube(edge);
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -334,7 +342,7 @@ static void draw_border_of_terrain(int U_FROM, int U_TO, int V_FROM, int V_TO)
         glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, material_diffuse);
         glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, material_specular);
         //glColor3f(0,1,1);
-    
+
         const int coef_of_mapping=10; //koeficijent mapiranja teksture
         glBindTexture(GL_TEXTURE_2D, texture_names[1]);
         glPushMatrix(); //gornji zid
@@ -349,12 +357,12 @@ static void draw_border_of_terrain(int U_FROM, int U_TO, int V_FROM, int V_TO)
                     glTexCoord2f(edge*coef_of_mapping , edge);
                     glVertex3f(edge/2, edge/2, edge/2);
                     glTexCoord2f(edge*coef_of_mapping, 0);
-                    glVertex3f(edge/2, -edge/2, edge/2);         
+                    glVertex3f(edge/2, -edge/2, edge/2);
                     glEnd();
                 glutSolidCube(edge);
             glPopMatrix();
         glPopMatrix();
-        
+
         glPushMatrix(); //donji zid
             glTranslatef(-(U_FROM+U_TO)/2,0,-V_FROM);
             glScalef(U_TO-U_FROM,4,1);
@@ -367,17 +375,17 @@ static void draw_border_of_terrain(int U_FROM, int U_TO, int V_FROM, int V_TO)
                     glTexCoord2f(edge*coef_of_mapping, edge);
                     glVertex3f(edge/2, edge/2, edge/2);
                     glTexCoord2f(edge*coef_of_mapping, 0);
-                    glVertex3f(edge/2, -edge/2, edge/2);         
+                    glVertex3f(edge/2, -edge/2, edge/2);
                     glEnd();
                 glutSolidCube(edge);
             glPopMatrix();
         glPopMatrix();
-    
+
         glPushMatrix(); //levi zid
             glTranslatef(U_FROM,0,-(V_FROM+V_TO)/2);
         // glRotatef(90,0,1,0);
             glScalef(1,4,V_TO-V_FROM);
-            glPushMatrix(); 
+            glPushMatrix();
                 glBegin(GL_QUADS);
                     double offset=0.01;
                     glTexCoord2f(0,0);
@@ -387,12 +395,12 @@ static void draw_border_of_terrain(int U_FROM, int U_TO, int V_FROM, int V_TO)
                     glTexCoord2f(edge*coef_of_mapping, edge);
                     glVertex3f(edge/2+offset, edge/2,-edge/2);
                     glTexCoord2f(edge*coef_of_mapping, 0);
-                    glVertex3f(edge/2+offset, -edge/2,-edge/2);         
+                    glVertex3f(edge/2+offset, -edge/2,-edge/2);
                     glEnd();
                 glutSolidCube(edge);
             glPopMatrix();
         glPopMatrix();
-    
+
         glPushMatrix(); //desni zid
             glTranslatef(-U_FROM,0,(V_FROM+V_TO)/2);
         // glRotatef(90,0,1,0);
@@ -406,7 +414,7 @@ static void draw_border_of_terrain(int U_FROM, int U_TO, int V_FROM, int V_TO)
                     glTexCoord2f(edge*coef_of_mapping , edge);
                     glVertex3f(-edge/2, edge/2,-edge/2);
                     glTexCoord2f(edge*coef_of_mapping, 0);
-                    glVertex3f(-edge/2, -edge/2,-edge/2);         
+                    glVertex3f(-edge/2, -edge/2,-edge/2);
                 glEnd();
                 glutSolidCube(edge);
             glPopMatrix();
@@ -429,7 +437,7 @@ static void draw_plane(int U_FROM, int U_TO, int V_FROM, int V_TO)
             glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, material_specular);
             glBindTexture(GL_TEXTURE_2D, texture_names[0]);
            // glColor3f(0,1,1);
-            for (u = U_FROM; u < U_TO; u++) { 
+            for (u = U_FROM; u < U_TO; u++) {
                 glBegin(GL_TRIANGLE_STRIP);
                 for (v = V_FROM; v <= V_TO; v++) {
                     set_vertex_and_normal(u, v, function_plane);
@@ -438,12 +446,12 @@ static void draw_plane(int U_FROM, int U_TO, int V_FROM, int V_TO)
                 glEnd();
             }
             glBindTexture(GL_TEXTURE_2D, 0);
-    }   
+    }
     glPopMatrix();
 
 }
 void draw_terrain(const Terrain* terrain)
 {
     draw_plane(terrain->U_FROM,terrain->U_TO,terrain->V_FROM,terrain->V_TO); //crtamo ravan po kojoj se krecemo
-    draw_border_of_terrain(terrain->U_FROM,terrain->U_TO,terrain->V_FROM,terrain->V_TO); //crtamo okvir za teren 
+    draw_border_of_terrain(terrain->U_FROM,terrain->U_TO,terrain->V_FROM,terrain->V_TO); //crtamo okvir za teren
 }
