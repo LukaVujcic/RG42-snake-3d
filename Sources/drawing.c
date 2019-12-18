@@ -241,6 +241,7 @@ static void set_vertex_and_normal(double u, double v,double (*function)(double,d
 static void apply_texture_cube(double edge,int texture)
 {
     int coef_of_mapping=1;
+    double offset=0.01;
     glBindTexture(GL_TEXTURE_2D, texture);
     glPushMatrix(); //prednja strana
 
@@ -294,13 +295,13 @@ static void apply_texture_cube(double edge,int texture)
 
             glBegin(GL_QUADS);
                 glTexCoord2f(0,0);
-                glVertex3f(-edge/2, -edge/2,edge/2);
+                glVertex3f(-edge/2-offset, -edge/2,edge/2);
                 glTexCoord2f(0, edge);
-                glVertex3f(-edge/2, edge/2,edge/2);
+                glVertex3f(-edge/2-offset, edge/2,edge/2);
                 glTexCoord2f(edge*coef_of_mapping, edge);
-                glVertex3f(-edge/2, edge/2,-edge/2);
+                glVertex3f(-edge/2-offset, edge/2,-edge/2);
                 glTexCoord2f(edge*coef_of_mapping, 0);
-                glVertex3f(-edge/2, -edge/2,-edge/2);
+                glVertex3f(-edge/2-offset, -edge/2,-edge/2);
             glEnd();
 
 
@@ -309,13 +310,13 @@ static void apply_texture_cube(double edge,int texture)
 
             glBegin(GL_QUADS);
                 glTexCoord2f(0 , 0);
-                glVertex3f(edge/2, -edge/2,edge/2);
+                glVertex3f(edge/2+offset, -edge/2,edge/2);
                 glTexCoord2f(0, edge);
-                glVertex3f(edge/2, edge/2,edge/2);
+                glVertex3f(edge/2+offset, edge/2,edge/2);
                 glTexCoord2f(edge*coef_of_mapping , edge);
-                glVertex3f(edge/2, edge/2,-edge/2);
+                glVertex3f(edge/2+offset, edge/2,-edge/2);
                 glTexCoord2f(edge*coef_of_mapping, 0);
-                glVertex3f(edge/2, -edge/2,-edge/2);
+                glVertex3f(edge/2+offset, -edge/2,-edge/2);
             glEnd();
 
 
@@ -331,7 +332,7 @@ static double function_plane(double u,double v)//funkcija je f(u,v)=c, zadaje ra
 static void draw_border_of_terrain(int U_FROM, int U_TO, int V_FROM, int V_TO)
 {
     double edge=1;
-  //  glColor3f(1,0,0);
+    glColor3f(0,0,0);
     glPushMatrix();
     {
         float material_ambient[] = { 0.5, 0.5, 0.5, 1 };
