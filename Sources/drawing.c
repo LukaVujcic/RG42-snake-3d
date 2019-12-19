@@ -3,11 +3,13 @@
 #include <GL/glut.h>
 #include <string.h>
 #include <stdio.h>
+#include <math.h>
 static int texture_names[3];
 #define FILENAME0 "../Textures/wood.bmp"
 #define FILENAME1 "../Textures/brick.bmp"
 #define FILENAME2 "../Textures/skin.bmp"
 #define MAX_LENGTH_STRING 50
+int animation_parametar;
 static char word[MAX_LENGTH_STRING]; //Koristimo staticku alokaciju za reci koje ispisujemo, dali smo pretpostavku o njihovoj duzini
 static void renderStrokeString(int x, int y,int z,void* font, char *string) 
 {
@@ -175,7 +177,7 @@ void draw_coordinate_system()
 }
 void draw_food(const Food *food)
 {
-    double edge=1;
+    double edge=0.8;
     glPushMatrix();
     float material_ambient[] = { 0, 1, 0, 1 };
         float material_diffuse[] = { 0, 1, 0, 1 };
@@ -186,6 +188,7 @@ void draw_food(const Food *food)
         glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, material_specular);
         glColor3f(0,1,0);
         glTranslatef(food->position.x,food->position.y,food->position.z); //Svaku kocku pozicioniramo da zadate koordinate
+        glRotatef((90*cos(animation_parametar/5.0)),0,1,0); //okrecemo ga za [-90,90] stepeni
         glutSolidCube(edge);
     glPopMatrix();
 }
@@ -196,9 +199,9 @@ void draw_snake(Snake *snake)
         // Renderovanje glave zmijice
         glPushMatrix();
         {
-                float material_ambient[] = { 1, 0, 0, 1 };
+                float material_ambient[] = { 0.3, 0, 0, 1 };
                 float material_diffuse[] = { 1, 0, 0, 1 };
-                float material_specular[] = { 1, 0, 0, 1 };
+                float material_specular[] = { 0.7, 0, 0, 1 };
                 //float high_shininess[] = { 4 };
                 glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, material_ambient);
                 glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, material_diffuse);
@@ -207,7 +210,9 @@ void draw_snake(Snake *snake)
 
                // glColor3f(1,0,0);
                 glTranslatef(snake->body[0].x,snake->body[0].y,snake->body[0].z);
-                glutSolidCube(edge);
+                apply_texture_cube(edge,texture_names[2]);
+
+                //glutSolidCube(edge);
         }
         glPopMatrix();
         //Renderovanje tela zmijice

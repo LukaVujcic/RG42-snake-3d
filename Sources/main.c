@@ -13,6 +13,7 @@ static void on_keyboard(unsigned char key, int x, int y);
 static void on_reshape(int width, int height);
 static void on_display(void); 
 static int animation_ongoing;
+extern int animation_parametar;
 static int TIMER_INTERVAL_SNAKE_INIT=100; //pocinjemo sa 100ms
 static int TIMER_INTERVAL_SNAKE_CURR; //zadajemo trenutni interval tajmera
 //TO DO Implementirati mehanizam za oslobadjanje memorije
@@ -47,6 +48,7 @@ static void on_timer(int value)
 {
     if (value != TIMER_ID)
         return;
+        animation_parametar++;
     move_snake(&snake,&terrain);
     if (is_food_eaten(&snake,&food)) //Da li smo pojeli hranu
     {
@@ -148,6 +150,7 @@ int main(int argc,char** argv)
     init_texture();
     glutTimerFunc(TIMER_INTERVAL_SNAKE_CURR, on_timer, TIMER_ID);
     TIMER_INTERVAL_SNAKE_CURR=TIMER_INTERVAL_SNAKE_INIT; //inicijalizujemo trenutni tajmer zmijice
+    animation_parametar=0;
     glEnable(GL_DEPTH_TEST); //Ukljucujemo mogucnosti prikazivanja u 3D
     glutMainLoop();
     return 0;
