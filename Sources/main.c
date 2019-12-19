@@ -72,35 +72,42 @@ static void on_timer(int value)
 
 static void on_keyboard(unsigned char key, int x, int y)
 {
+
     switch (key) {
     case 27:
         
         exit(EXIT_SUCCESS);
         break;
     case 'a':
+    case 'A':
         if (snake.direction.x==1) break;
         snake.direction.x=-1;
         snake.direction.z=0;  
         break;
     case 'd':
+    case 'D':
         if (snake.direction.x==-1) break;
         snake.direction.x=+1;
         snake.direction.z=0;
         break;
     case 'w':
+    case 'W':
         if (snake.direction.z==1) break;
         snake.direction.x=0;
         snake.direction.z=-1;
         break;
     case 's':
+    case 'S':
         if (snake.direction.z==-1) break;
         snake.direction.x=0;
         snake.direction.z=1;
         break;
     case 'p': //pauziramo
+    case 'P':
         animation_ongoing=0;
         break;
     case 'b': //pokrecemo
+    case 'B':
     
         if (animation_ongoing==0){
             animation_ongoing=1;

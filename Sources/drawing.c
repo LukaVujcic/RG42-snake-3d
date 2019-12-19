@@ -302,13 +302,13 @@ static void apply_texture_cube(double edge,int texture)
 
             glBegin(GL_QUADS);
                 glTexCoord2f(0,0);
-                glVertex3f(-edge/2, edge/2,edge/2);
+                glVertex3f(-edge/2, edge/2+offset,edge/2);
                 glTexCoord2f(0, edge);
-                glVertex3f(-edge/2, edge/2,-edge/2);
+                glVertex3f(-edge/2, edge/2+offset,-edge/2);
                 glTexCoord2f(edge*coef_of_mapping, edge);
-                glVertex3f(edge/2, edge/2,-edge/2);
+                glVertex3f(edge/2, edge/2+offset,-edge/2);
                 glTexCoord2f(edge*coef_of_mapping, 0);
-                glVertex3f(edge/2, edge/2,edge/2);
+                glVertex3f(edge/2, edge/2+offset,edge/2);
             glEnd();
 
 
