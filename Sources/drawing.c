@@ -307,13 +307,13 @@ static void apply_texture_cube(double edge,int texture)
 
             glBegin(GL_QUADS);
                 glTexCoord2f(0,0);
-                glVertex3f(-edge/2, edge/2+offset,edge/2);
+                glVertex3f(-edge/2, edge/2,edge/2);
                 glTexCoord2f(0, edge);
-                glVertex3f(-edge/2, edge/2+offset,-edge/2);
+                glVertex3f(-edge/2, edge/2,-edge/2);
                 glTexCoord2f(edge*coef_of_mapping, edge);
-                glVertex3f(edge/2, edge/2+offset,-edge/2);
+                glVertex3f(edge/2, edge/2,-edge/2);
                 glTexCoord2f(edge*coef_of_mapping, 0);
-                glVertex3f(edge/2, edge/2+offset,edge/2);
+                glVertex3f(edge/2, edge/2,edge/2);
             glEnd();
 
 
@@ -349,7 +349,7 @@ static void apply_texture_cube(double edge,int texture)
 
 
     glPopMatrix();
-    glutSolidCube(edge);
+   
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 static double function_plane(double u,double v)//funkcija je f(u,v)=c, zadaje ravan y=c
