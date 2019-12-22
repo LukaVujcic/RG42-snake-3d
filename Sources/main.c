@@ -21,6 +21,7 @@ static int TIMER_INTERVAL_SNAKE_CURR; //zadajemo trenutni interval tajmera
 static int TIMER_BONUS=1800;
 int is_bonus_active=0;
 int is_game_over=0;
+extern int lock; //zakljucavanje koje koristimo da bi izbegli nedozvoljeno kretanje zmijice
 static void on_display()
 {
      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -106,35 +107,38 @@ static void on_timer(int value)
 
 static void on_keyboard(unsigned char key, int x, int y)
 {
-
+    if (lock) return; //ako su kontrole zakljucane izlazimo
     switch (key) {
     case 27:
-        
         exit(EXIT_SUCCESS);
         break;
     case 'a':
     case 'A':
         if (snake.direction.x==1) break;
         snake.direction.x=-1;
-        snake.direction.z=0;  
+        snake.direction.z=0;
+        lock=1;  
         break;
     case 'd':
     case 'D':
         if (snake.direction.x==-1) break;
         snake.direction.x=+1;
         snake.direction.z=0;
+        lock=1;
         break;
     case 'w':
     case 'W':
         if (snake.direction.z==1) break;
         snake.direction.x=0;
         snake.direction.z=-1;
+        lock=1;
         break;
     case 's':
     case 'S':
         if (snake.direction.z==-1) break;
         snake.direction.x=0;
         snake.direction.z=1;
+        lock=1;
         break;
     case 'p': //pauziramo
     case 'P':
@@ -142,7 +146,6 @@ static void on_keyboard(unsigned char key, int x, int y)
         break;
     case 'b': //pokrecemo
     case 'B':
-    
         if (animation_ongoing==0){
             animation_ongoing=1;
             glutTimerFunc(TIMER_INTERVAL_SNAKE_CURR, on_timer, TIMER_ID);
@@ -187,6 +190,7 @@ int main(int argc,char** argv)
     bonus.r=0;
     bonus.g=0;
     bonus.b=1;
+    lock=0;
     glEnable(GL_DEPTH_TEST); //Ukljucujemo mogucnosti prikazivanja u 3D
     glutMainLoop();
     return 0;

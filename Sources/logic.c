@@ -7,6 +7,7 @@
 #include <math.h>
 #include <string.h>
 int is_game_over;
+int lock;
 void init_game(Snake *snake, Food *food,int *animation_ongoing,Terrain *terrain)
 {
     food->r=0;
@@ -96,6 +97,7 @@ void size_up(Snake *snake, int n)
         snake->body[snake->size].z= current.z;
         snake->size++;
     }
+   
     
 }
 int is_snake_touch_border(Snake *snake, const Terrain *terrain)
@@ -129,6 +131,6 @@ void move_snake(Snake *snake,const Terrain *terrain)
     snake->body[0].y+=snake->direction.y;
     snake->body[0].z+=snake->direction.z;
     set_field(terrain->free_fields,snake->body[0].x,snake->body[0].z,1,terrain->row_num,terrain->col_num);
-    
+    lock=0; //oslobadjamo katanac sa kontrola
        
 }
