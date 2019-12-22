@@ -35,5 +35,5 @@ void set_field(int *free_fields,int x, int y,int flag,int row_num,int col_num)
 int is_field_free(int *free_fields,int x, int y,int row_num,int col_num)
 {
     int code=code_val(x,y);
-    return free_fields[offset(abs(x),abs(y),code+depth_move,row_num,col_num)];
+    return !free_fields[offset(abs(x),abs(y),code+depth_move,row_num,col_num)];
 }

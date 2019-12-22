@@ -5,9 +5,10 @@
 #include "../Headers/logic.h"
 #include "../Headers/map.h"
 #define TIMER_ID 0
-
+#define TIMER_ID1 1
 static Snake snake;
 static Food food;
+static Food bonus;
 static Terrain terrain;
 static void on_keyboard(unsigned char key, int x, int y);
 static void on_reshape(int width, int height);
@@ -17,6 +18,8 @@ extern int animation_parametar;
 static int TIMER_INTERVAL_SNAKE_INIT=100; //pocinjemo sa 100ms
 static int TIMER_INTERVAL_SNAKE_CURR; //zadajemo trenutni interval tajmera
 //TO DO Implementirati mehanizam za oslobadjanje memorije
+static int TIMER_BONUS=1800;
+int is_bonus_active=0;
 int is_game_over=0;
 static void on_display()
 {
@@ -32,6 +35,10 @@ static void on_display()
         //draw_coordinate_system();
         draw_snake(&snake);
         draw_food(&food);
+        if (snake.score%10==0 && is_bonus_active)
+        {
+             draw_food(&bonus);
+        }
         draw_terrain(&terrain);
         draw_score(&snake);
      }
@@ -39,20 +46,28 @@ static void on_display()
      {
          draw_game_over(&snake);
      }
-     
     
      glutSwapBuffers();
 }
-
+static void timeout_bonus(int value)
+{
+     if (value != TIMER_ID1)
+        return;
+     is_bonus_active=0;
+     
+}
 static void on_timer(int value)
 {
     if (value != TIMER_ID)
         return;
-        animation_parametar++;
+    animation_parametar++;
     move_snake(&snake,&terrain);
+    
     if (is_food_eaten(&snake,&food)) //Da li smo pojeli hranu
     {
+       
         increase_score(&snake,1); //uvecavamo skor za 1
+        
         if (TIMER_INTERVAL_SNAKE_CURR>50) // ne dozvoljavamo da bude prebrzo
         {
             const int coef_of_speed=5; //zadajemo koef za koji se menja brzina na svakih 5 bodova 
@@ -62,10 +77,27 @@ static void on_timer(int value)
         do
         {
             generate_food_position(&food.position.x,&food.position.z);  //Posto je hrana pojedena generisemo novu hranu
-        } while (is_field_free(terrain.free_fields, food.position.x, food.position.z,terrain.row_num,terrain.col_num));
+        } while (!is_field_free(terrain.free_fields, food.position.x, food.position.z,terrain.row_num,terrain.col_num));
         size_up(&snake,1); //povecavamo zmijicu za 1 polje
-       
-    }
+        if (snake.score%10==0) //ako smo dosli do skora za generisanje bonus vockice
+        {
+            //generisemo sve dok ne pogodimo slobodno polje
+            do
+            {
+                generate_food_position(&bonus.position.x,&bonus.position.z);
+            } while (!is_field_free(terrain.free_fields, bonus.position.x, bonus.position.z,terrain.row_num,terrain.col_num) ||( bonus.position.x==food.position.x && bonus.position.z==food.position.z));
+           is_bonus_active=1;
+           glutTimerFunc(TIMER_BONUS,timeout_bonus,TIMER_ID1);  //postavljamo da nestane bonus nakon TIMER_BONUS ms
+        }
+    }     
+    if (is_food_eaten(&snake,&bonus) && is_bonus_active) //ako smo pojeli bonusnu vockicu
+    {
+        snake.score+=5;
+        is_bonus_active=0;
+    } 
+    
+    
+  
     glutPostRedisplay();
     if (animation_ongoing) {
         glutTimerFunc(TIMER_INTERVAL_SNAKE_CURR, on_timer, TIMER_ID);
@@ -150,7 +182,11 @@ int main(int argc,char** argv)
     init_texture();
     glutTimerFunc(TIMER_INTERVAL_SNAKE_CURR, on_timer, TIMER_ID);
     TIMER_INTERVAL_SNAKE_CURR=TIMER_INTERVAL_SNAKE_INIT; //inicijalizujemo trenutni tajmer zmijice
-    animation_parametar=0;
+    animation_parametar=0; //inicijalizujemo animacioni parametar
+    //Inicijalizujemo boju bonusa na plavu
+    bonus.r=0;
+    bonus.g=0;
+    bonus.b=1;
     glEnable(GL_DEPTH_TEST); //Ukljucujemo mogucnosti prikazivanja u 3D
     glutMainLoop();
     return 0;

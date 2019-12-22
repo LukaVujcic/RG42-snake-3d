@@ -179,16 +179,17 @@ void draw_food(const Food *food)
 {
     double edge=0.8;
     glPushMatrix();
-    float material_ambient[] = { 0, 1, 0, 1 };
-        float material_diffuse[] = { 0, 1, 0, 1 };
+        float material_ambient[] = { food->r, food->g, food->b, 1 };
+        float material_diffuse[] = {food->r, food->g, food->b, 1 };
         float material_specular[] = { 0.1, 0.1, 0.1, 1 };
         //float high_shininess[] = { 4 };
         glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, material_ambient);
         glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, material_diffuse);
         glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, material_specular);
-        glColor3f(0,1,0);
+        
         glTranslatef(food->position.x,food->position.y,food->position.z); //Svaku kocku pozicioniramo da zadate koordinate
         glRotatef((90*cos(animation_parametar/5.0)),0,1,0); //okrecemo ga za [-90,90] stepeni
+        //glColor3f(0,1,0);
         glutSolidCube(edge);
     glPopMatrix();
 }
@@ -360,7 +361,7 @@ static double function_plane(double u,double v)//funkcija je f(u,v)=c, zadaje ra
 static void draw_border_of_terrain(int U_FROM, int U_TO, int V_FROM, int V_TO)
 {
     double edge=1;
-    glColor3f(0,0,0);
+    //glColor3f(0,0,0);
     glPushMatrix();
     {
         float material_ambient[] = { 0.5, 0.5, 0.5, 1 };

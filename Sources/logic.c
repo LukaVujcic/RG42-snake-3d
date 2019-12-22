@@ -9,6 +9,9 @@
 int is_game_over;
 void init_game(Snake *snake, Food *food,int *animation_ongoing,Terrain *terrain)
 {
+    food->r=0;
+    food->g=1;
+    food->b=0;
     srand(time(NULL)); //Incijalizacija seed-a
     const int size=5; /*duzina zmijice*/
     const int max_size=500; //velicina zmijice nece biti preko 500
@@ -24,7 +27,7 @@ void init_game(Snake *snake, Food *food,int *animation_ongoing,Terrain *terrain)
     terrain->U_TO=17;
     terrain->V_FROM=-15;
     terrain->V_TO=15;
-    snake->score=0;
+    snake->score=19;
     int *free_fields=NULL;
     terrain->row_num=terrain->V_TO-terrain->V_FROM+1; //broj vrsta
     terrain->col_num=terrain->U_TO-terrain->U_FROM+1; //broj kolona
