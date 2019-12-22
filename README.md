@@ -1,11 +1,15 @@
 # Snake 3D :snake: :snake: :snake:
 
-### :memo: Informacije o igri:
+### :memo: Informacije i pravila igre:
 * Remake poznate igre zmijice <br>
 * Skupljamo voćkice, kako bi zmijica porasla i time dobijamo poene <br>
 * Rastom zmijice povećava se njena brzina <br>
 * Igra se dok se zmijica ne ujede ili ne udari u zid <br>
-
+* Postoje zelene i plave voćkice
+* Zelene su osnovne i donose po 1 bod
+* Plave su bonusne voćkice i donose po 5 bodova
+* Na svakih 10 bodova pojavljuje se bonusna plava voćkica
+* Bonusna voćkica se mora brzo uzeti inače će nestati
 <hr>
 
 ### :video_game: Komande:
