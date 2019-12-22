@@ -27,7 +27,7 @@ void init_game(Snake *snake, Food *food,int *animation_ongoing,Terrain *terrain)
     terrain->U_TO=17;
     terrain->V_FROM=-15;
     terrain->V_TO=15;
-    snake->score=19;
+    snake->score=0;
     int *free_fields=NULL;
     terrain->row_num=terrain->V_TO-terrain->V_FROM+1; //broj vrsta
     terrain->col_num=terrain->U_TO-terrain->U_FROM+1; //broj kolona
