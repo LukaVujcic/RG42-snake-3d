@@ -3,7 +3,7 @@
 const int depth_move=3; //koristimo kao pomeraj jer ne mozemo da mapiramo negativne vrednosti pomocu code
 static int offset(int x, int y, int z,int row_num,int col_num) 
 { 
-    return (z * row_num * col_num) + (y * row_num) + x; 
+    return (z * row_num * col_num) + (y * row_num) + x; //zadaje 3D->1D preslikavanje
 }
 static int code_val(int x,int y)
 {
@@ -29,11 +29,11 @@ static int code_val(int x,int y)
 void set_field(int *free_fields,int x, int y,int flag,int row_num,int col_num)
 {
     int code=code_val(x,y); //Koristimo code da kodiramo kojoj matrici od depth matrica postavljamo vrednost
- 
+    //promenjivom flag postavljamo da li je polje slobodno ili zauzeto
     free_fields[offset(abs(x),abs(y),code+depth_move,row_num,col_num)]=flag; 
 }
 int is_field_free(int *free_fields,int x, int y,int row_num,int col_num)
-{
+{   //ako je vrednost polja 0 onda je slobodno, inace je zauzeto
     int code=code_val(x,y);
     return !free_fields[offset(abs(x),abs(y),code+depth_move,row_num,col_num)];
 }

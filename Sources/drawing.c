@@ -104,10 +104,10 @@ void init_texture(void)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
                  image->width, image->height, 0,
                  GL_RGB, GL_UNSIGNED_BYTE, image->pixels);
-    /* Iskljucujemo teksturu */
+    // Iskljucujemo teksturu 
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    /*Ucitavamo drugu strukturu*/
+    // Ucitavamo drugu teksturu
     image_read(image, FILENAME1);
 
     glBindTexture(GL_TEXTURE_2D, texture_names[1]);
@@ -122,8 +122,8 @@ void init_texture(void)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
                  image->width, image->height, 0,
                  GL_RGB, GL_UNSIGNED_BYTE, image->pixels);
-    /* Oslobadjamo objekat iz memorije */
 
+    // Ucitavamo trecu teksturu
     image_read(image, FILENAME2);
 
     glBindTexture(GL_TEXTURE_2D, texture_names[2]);
@@ -138,6 +138,7 @@ void init_texture(void)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
                  image->width, image->height, 0,
                  GL_RGB, GL_UNSIGNED_BYTE, image->pixels);
+    //oslobadjamo image
     image_done(image);
 
 }
@@ -147,6 +148,7 @@ void init_light(void)
     float light_diffuse[] = { 1, 1, 1, 1 };
     float light_specular[] = { 1, 1, 1, 1 };
     float light_position[] = { 1, 1, 1, 0 };
+    //ukljucujemo osvetljenje, podesavamo jedan izvor svetlosti i podesavamo mu poziciju
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
@@ -179,6 +181,7 @@ void draw_food(const Food *food)
 {
     double edge=0.8;
     glPushMatrix();
+        //Podesavamo reflektivna svojstva materijala tako da bude boja koju zelimo
         float material_ambient[] = { food->r, food->g, food->b, 1 };
         float material_diffuse[] = {food->r, food->g, food->b, 1 };
         float material_specular[] = { 0.1, 0.1, 0.1, 1 };
@@ -210,7 +213,9 @@ void draw_snake(Snake *snake)
                // glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
 
                // glColor3f(1,0,0);
+                //transliramo na poziciju na kojoj treba da se nalazi glava
                 glTranslatef(snake->body[0].x,snake->body[0].y,snake->body[0].z);
+                //postavljamo teksturu
                 apply_texture_cube(edge,texture_names[2]);
 
                 //glutSolidCube(edge);
@@ -220,18 +225,6 @@ void draw_snake(Snake *snake)
        // glColor3f(0,0,1);
         for (i=1;i<snake->size;i++)
         {
-            /*Deo koda koji naizmenicno boji zmijicu*/
-            /*if (i&1)
-            {
-                 glColor3f(0,0,1);
-
-            }
-            else
-            {
-                 glColor3f(0,1,0);
-
-            }*/
-
             glPushMatrix();
             {
                 float material_ambient[] = { 0, 0, 1, 1 };
@@ -242,7 +235,9 @@ void draw_snake(Snake *snake)
                 glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, material_diffuse);
                 glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, material_specular);
                 //glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, high_shininess);
+                //transliramo na poziciju na kojoj treba da je taj deo tela tj i-ta kocka
                 glTranslatef(snake->body[i].x,snake->body[i].y,snake->body[i].z);
+                //postavljamo teksturu na kocku
                 apply_texture_cube(edge,texture_names[2]);
                 //glutSolidCube(edge);
             }
@@ -270,7 +265,7 @@ static void set_vertex_and_normal(double u, double v,double (*function)(double,d
 static void apply_texture_cube(double edge,int texture)
 {
     int coef_of_mapping=1;
-    double offset=0.01;
+    double offset=0.01; //koristimo kao nacin uklanjanje greske pri racunanju sa brojevima u pokretnom zarezu
     glBindTexture(GL_TEXTURE_2D, texture);
     glPushMatrix(); //prednja strana
 
@@ -361,9 +356,8 @@ static double function_plane(double u,double v)//funkcija je f(u,v)=c, zadaje ra
 static void draw_border_of_terrain(int U_FROM, int U_TO, int V_FROM, int V_TO)
 {
     double edge=1;
-    //glColor3f(0,0,0);
     glPushMatrix();
-    {
+    {   //podesavamo refleksiju svetlosti za ivice terena
         float material_ambient[] = { 0.5, 0.5, 0.5, 1 };
         float material_diffuse[] = { 1, 0, 0, 1 };
         float material_specular[] = { 0.5, 0.5, 0.5, 1 };
@@ -374,6 +368,7 @@ static void draw_border_of_terrain(int U_FROM, int U_TO, int V_FROM, int V_TO)
         //glColor3f(0,1,1);
 
         const int coef_of_mapping=10; //koeficijent mapiranja teksture
+        //lepimo teksture na odgovarajuci nacin
         glBindTexture(GL_TEXTURE_2D, texture_names[1]);
         glPushMatrix(); //gornji zid
             glTranslatef((U_FROM+U_TO)/2,0,V_FROM);
@@ -433,7 +428,6 @@ static void draw_border_of_terrain(int U_FROM, int U_TO, int V_FROM, int V_TO)
 
         glPushMatrix(); //desni zid
             glTranslatef(-U_FROM,0,(V_FROM+V_TO)/2);
-        // glRotatef(90,0,1,0);
             glScalef(1,4,V_TO-V_FROM);
             glPushMatrix();
                 glBegin(GL_QUADS);
@@ -457,7 +451,7 @@ static void draw_plane(int U_FROM, int U_TO, int V_FROM, int V_TO)
 {
     int u, v;
     glPushMatrix();
-    {
+    {       //podesavamo refleksiju za pod
             float material_ambient[] = { 0, 0, 0, 1 };
             float material_diffuse[] = { 0.7, 0.7, 0.7, 1 };
             float material_specular[] = { 0, 0, 0, 1 };
@@ -466,7 +460,7 @@ static void draw_plane(int U_FROM, int U_TO, int V_FROM, int V_TO)
             glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, material_diffuse);
             glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, material_specular);
             glBindTexture(GL_TEXTURE_2D, texture_names[0]);
-           // glColor3f(0,1,1);
+            //deo koda za iscrtavanje poda i ujedno i lepimo teksturu
             for (u = U_FROM; u < U_TO; u++) {
                 glBegin(GL_TRIANGLE_STRIP);
                 for (v = V_FROM; v <= V_TO; v++) {

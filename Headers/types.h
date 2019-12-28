@@ -12,13 +12,13 @@ typedef struct {
     
 } Snake;
 
-typedef struct { /*TO DO obavezno dodati razlicite tipove hrane*/
+typedef struct {
     Point position;
-    double r,g,b;
+    double r,g,b; //zadajemo boju vockice
 } Food;
 typedef struct{
-    int U_FROM, U_TO, V_FROM, V_TO;
-    int row_num,col_num;
+    int U_FROM, U_TO, V_FROM, V_TO; //dimenzije terena
+    int row_num,col_num; //matrica koja mapira slobodna i zauzeta polja
     int *free_fields;
 } Terrain;
 #endif
