@@ -25,6 +25,6 @@
 
 ### :wrench: Uputsvo za instalaciju:
 * Projekat mozete preuzeti pomoću komande `git clone https://github.com/MATF-RG19/RG42-snake-3d` <br>
-* Pozicionirati se u direktorijum projekta
-* Pokrenuti Makefile  sa komandom "make"<br>
+* Pozicionirati se u direktorijum projekta, a zatim u direktorijum "Sources"
+* Pokrenuti Makefile  sa komandom `make` <br>
 * Pokrenuti program `./Snake3D.out`
