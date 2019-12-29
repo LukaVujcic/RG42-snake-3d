@@ -18,7 +18,7 @@
 <kbd>s</kbd> - dole <br>
 <kbd>d</kbd> - desno <br>
 <kbd>p</kbd> - pauziraj <br>
-<kbd>b</kbd> - nastavi pauzirano <br>
+<kbd>b</kbd> - nastavi pauziranu igru <br>
 <kbd>esc</kbd> - izlaz iz igre <br>
 
 <hr>
